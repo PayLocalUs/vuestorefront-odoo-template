@@ -1,28 +1,45 @@
 <template>
   <div id="home">
-    <LazyHydrate when-idle>
+    <LazyHydrate when-visible>
+      <div class="frontPageAnimation">
+        <!--  Todo: Create animation component -->
+      </div>
+    </LazyHydrate>
+
+    <SfSection
+      titleHeading="WELCOME TO COOKE FURNITURE"
+      subtitleHeading="We specialize in the creation of stunning designer custom outdoor fire pit tables by using the finest quality stainless steel, acid washed copper and magnificent granite and marble from all over the world. The product line is constantly growing and changing as new pieces are designed.
+All stainless steel outdoor furniture products and fire pits are guaranteed to have life long structural integrity in any condition.
+Every piece is engineered to endure and manufactured in California."
+      :levelHeading="2"
+    />
+
+    <SfArrow />
+
+    <LazyHydrate when-visible>
       <SfHero class="hero">
         <SfHeroItem
           v-for="(hero, i) in heroes"
           :key="i"
-          :title="hero.title"
-          :subtitle="hero.subtitle"
           :background="hero.background"
           :image="hero.image"
           :class="hero.className"
-        />
+        >
+          <template #title>
+            <div class="hero-title">{{ hero.title }}</div>
+          </template>
+          <template #subtitle>
+            <div class="hero-subtitle">{{ hero.subtitle }}</div>
+          </template>
+        </SfHeroItem>
       </SfHero>
     </LazyHydrate>
 
     <LazyHydrate when-visible>
-      <SfBannerGrid :banner-grid="1" class="banner-grid">
+      <SfBannerGrid :banner-grid="2" class="banner-grid">
         <template v-for="item in banners" v-slot:[item.slot]>
           <SfBanner
             :key="item.slot"
-            :title="item.title"
-            :subtitle="item.subtitle"
-            :description="item.description"
-            :button-text="item.buttonText"
             :link="localePath(item.link)"
             :image="item.image"
             :class="item.class"
@@ -30,112 +47,23 @@
         </template>
       </SfBannerGrid>
     </LazyHydrate>
-
-    <LazyHydrate when-visible>
-      <div class="similar-products">
-        <SfHeading title="Match with it" :level="2" />
-        <nuxt-link :to="localePath('/c/women')" class="smartphone-only">
-          {{ $t('See all') }}
-        </nuxt-link>
-      </div>
-    </LazyHydrate>
-
-    <LazyHydrate when-visible>
-      <SfCarousel
-        class="carousel"
-        :settings="{ peek: 16, breakpoints: { 1023: { peek: 0, perView: 2 } } }"
-      >
-        <template #prev="{ go }">
-          <SfArrow
-            aria-label="prev"
-            class="sf-arrow--left sf-arrow--long"
-            @click="go('prev')"
-          />
-        </template>
-        <template #next="{ go }">
-          <SfArrow
-            aria-label="next"
-            class="sf-arrow--right sf-arrow--long"
-            @click="go('next')"
-          />
-        </template>
-        <SfCarouselItem
-          class="carousel__item"
-          v-for="(product, i) in products"
-          :key="i"
-        >
-          <SfProductCard
-            :title="product.title"
-            :image="product.image"
-            :imageWidth="216"
-            :imageHeight="288"
-            :nuxtImgConfig="{ fit: 'cover' }"
-            image-tag="nuxt-img"
-            :regular-price="product.price.regular"
-            :max-rating="product.rating.max"
-            :score-rating="product.rating.score"
-            :show-add-to-cart-button="true"
-            :is-on-wishlist="product.isInWishlist"
-            :link="localePath({ name: 'home' })"
-            class="carousel__item__product"
-            @click:wishlist="toggleWishlist(i)"
-          />
-        </SfCarouselItem>
-      </SfCarousel>
-    </LazyHydrate>
-
-    <LazyHydrate when-visible>
-      <SfCallToAction
-        title="Subscribe to Newsletters"
-        button-text="Subscribe"
-        description="Be aware of upcoming sales and events. Receive gifts and special offers!"
-        :image="addBasePath('/homepage/newsletter.webp')"
-        class="call-to-action"
-      >
-        <template #button>
-          <SfButton
-            class="sf-call-to-action__button"
-            data-testid="cta-button"
-            @click="toggleNewsletterModal"
-          >
-            {{ $t('Subscribe') }}
-          </SfButton>
-        </template>
-      </SfCallToAction>
-    </LazyHydrate>
-
-    <LazyHydrate when-visible>
-      <NewsletterModal @email-submitted="onSubscribe" :loading="loading" />
-    </LazyHydrate>
-
-    <LazyHydrate when-visible>
-      <InstagramFeed />
-    </LazyHydrate>
   </div>
 </template>
 <script>
 import {
   SfHero,
   SfBanner,
-  SfCallToAction,
   SfSection,
-  SfCarousel,
-  SfProductCard,
   SfImage,
   SfBannerGrid,
   SfHeading,
   SfArrow,
-  SfButton
+  SfButton,
+  SfIcon
 } from '@storefront-ui/vue';
-import { ref, useContext } from '@nuxtjs/composition-api';
-import InstagramFeed from '~/components/InstagramFeed.vue';
-import NewsletterModal from '~/components/NewsletterModal.vue';
 import LazyHydrate from 'vue-lazy-hydration';
-import { useUiState } from '../composables';
-import { useNewsLetter } from '@vue-storefront/odoo';
 import cacheControl from './../helpers/cacheControl';
 import { addBasePath } from '@vue-storefront/core';
-import { useUiNotification } from '~/composables';
 
 export default {
   name: 'Home',
@@ -144,182 +72,74 @@ export default {
     'stale-when-revalidate': 5
   }),
   components: {
-    InstagramFeed,
     SfHero,
     SfBanner,
-    SfCallToAction,
     SfSection,
-    SfCarousel,
-    SfProductCard,
     SfImage,
     SfBannerGrid,
     SfHeading,
     SfArrow,
     SfButton,
-    NewsletterModal,
-    LazyHydrate
+    LazyHydrate,
+    SfIcon
   },
   setup() {
-    const { $config } = useContext();
-    const { sendSubscription, loading } = useNewsLetter();
-    const { toggleNewsletterModal } = useUiState();
-    const { send } = useUiNotification();
-
-    const products = ref([
-      {
-        title: 'Cream Beach Bag',
-        image: addBasePath('/homepage/productA.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: true
-      },
-      {
-        title: 'Cream Beach Bag 2',
-        image: addBasePath('/homepage/productB.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag 3',
-        image: addBasePath('homepage/productC.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag RR',
-        image: addBasePath('/homepage/productA.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag',
-        image: addBasePath('/homepage/productB.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag',
-        image: addBasePath('/homepage/productC.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag',
-        image: addBasePath('/homepage/productA.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag',
-        image: addBasePath('/homepage/productB.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      }
-    ]);
     const heroes = [
       {
-        title: 'Colorful summer dresses are already in store',
-        subtitle: 'SUMMER COLLECTION 2019',
+        title: 'Cooke Collection',
+        subtitle:
+          'Our COOKE Collection is tailored to design professionals including architects and interior designers since the collection allows for full customization.',
         background: '#eceff1',
-        image: addBasePath('/homepage/bannerH.webp')
+        image: addBasePath('/homepage/Cooke-Collection-Banner.jpg')
       },
       {
-        title: 'Colorful summer dresses are already in store',
-        subtitle: 'SUMMER COLLECTION 2019',
+        title: 'SoCal Collection',
+        subtitle:
+          'Our SoCal Collection is produced in quantity and is made from sturdy aluminum to offer high value American products.',
         background: '#efebe9',
-        image: addBasePath('/homepage/bannerA.webp'),
+        image: addBasePath('/homepage/SoCal-Collection-Banner.jpg'),
         className:
           'sf-hero-item--position-bg-top-left sf-hero-item--align-right'
       },
       {
-        title: 'Colorful summer dresses are already in store',
-        subtitle: 'SUMMER COLLECTION 2019',
-        background: '#fce4ec',
-        image: addBasePath('/homepage/bannerB.webp')
+        title: 'Shop Parts',
+        subtitle:
+          'Here we are going to need some text for the rest of the store.',
+        background: '#eceff1',
+        image: addBasePath('')
       }
     ];
     const banners = [
       {
         slot: 'banner-A',
-        subtitle: 'Dresses',
-        title: 'Cocktail & Party',
-        description:
-          'Find stunning women\'s cocktail dresses and party dresses. Stand out in lace and metallic cocktail dresses from all your favorite brands.',
-        buttonText: 'Shop now',
-        image: {
-          mobile: addBasePath($config.theme.home.bannerA.image.mobile),
-          desktop: addBasePath($config.theme.home.bannerA.image.desktop)
-        },
+        image: addBasePath('/homepage/gallery-1.jpg'),
         class: 'sf-banner--slim desktop-only',
-        link: $config.theme.home.bannerA.link
+        link: ''
       },
       {
         slot: 'banner-B',
-        subtitle: 'Dresses',
-        title: 'Linen Dresses',
-        description:
-          'Find stunning women\'s cocktail dresses and party dresses. Stand out in lace and metallic cocktail dresses from all your favorite brands.',
-        buttonText: 'Shop now',
-        image: addBasePath($config.theme.home.bannerB.image),
+        image: addBasePath('/homepage/gallery-1.jpg'),
         class: 'sf-banner--slim banner-central desktop-only',
-        link: $config.theme.home.bannerB.link
+        link: ''
       },
       {
         slot: 'banner-C',
-        subtitle: 'T-Shirts',
-        title: 'The Office Life',
-        image: addBasePath($config.theme.home.bannerC.image),
+        image: addBasePath('/homepage/gallery-1.jpg'),
         class: 'sf-banner--slim banner__tshirt',
-        link: $config.theme.home.bannerC.link
+        link: ''
       },
       {
         slot: 'banner-D',
-        subtitle: 'Summer Sandals',
-        title: 'Eco Sandals',
-        image: addBasePath($config.theme.home.bannerD.image),
+        image: addBasePath('/homepage/gallery-1.jpg'),
         class: 'sf-banner--slim',
-        link: $config.theme.home.bannerD.link
+        link: ''
       }
     ];
 
-    const onSubscribe = async (emailAddress) => {
-      const data = await sendSubscription({ email: emailAddress });
-
-      if (data.subscribed) {
-        send({
-          message: 'Subscribe successfull!',
-          type: 'success'
-        });
-      }
-      if (!data.subscribed) {
-        send({
-          message: 'Something wrong!',
-          type: 'danger'
-        });
-      }
-      toggleNewsletterModal();
-    };
-
-    const toggleWishlist = (index) => {
-      products.value[index].isInWishlist = !products.value[index].isInWishlist;
-    };
-
     return {
-      toggleWishlist,
-      toggleNewsletterModal,
-      onSubscribe,
       addBasePath,
       banners,
-      heroes,
-      products,
-      loading
+      heroes
     };
   }
 };
@@ -359,7 +179,7 @@ export default {
   ::v-deep .sf-hero__control {
     &--right,
     &--left {
-      display: none;
+      // TODO: Change Color of Arrows
     }
   }
 }
@@ -387,49 +207,6 @@ export default {
     @include for-desktop {
       --banner-container-flex: 0 0 70%;
     }
-  }
-}
-
-.similar-products {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: var(--spacer-2xs);
-  --heading-padding: 0;
-  border-bottom: 1px var(--c-light) solid;
-  @include for-desktop {
-    border-bottom: 0;
-    justify-content: center;
-    padding-bottom: 0;
-  }
-}
-
-.call-to-action {
-  background-position: right;
-  margin: var(--spacer-xs) 0;
-  @include for-desktop {
-    margin: var(--spacer-xl) 0 var(--spacer-2xl) 0;
-  }
-}
-
-.carousel {
-  margin: 0 calc(0 - var(--spacer-sm)) 0 0;
-  @include for-desktop {
-    margin: 0;
-  }
-  &__item {
-    margin: 1.375rem 0 2.5rem 0;
-    @include for-desktop {
-      margin: var(--spacer-xl) 0 var(--spacer-xl) 0;
-    }
-    &__product {
-      --product-card-add-button-transform: translate3d(0, 30%, 0);
-    }
-  }
-  ::v-deep .sf-arrow--long .sf-arrow--right {
-    --arrow-icon-transform: rotate(180deg);
-    -webkit-transform-origin: center;
-    transform-origin: center;
   }
 }
 </style>
