@@ -44,6 +44,19 @@
       </SfHero>
     </LazyHydrate>
 
+    <div class="sf-heading">
+      <h3 class="sf-heading__title h3">Perfectly designed and constructed</h3>
+      <div class="sf-heading__description">
+        Our product line continually expands to include new options for our
+        customers. Whether you are searching for a contemporary outdoor fire pit
+        or stainless steel outdoor furniture products, you can enjoy durable and
+        exceptionally constructed products that are built to last. Each piece
+        has been engineered and manufactured in California, adhering to the
+        highest quality standards. Our fire pits have been perfectly designed
+        and constructed with superior workmanship and attention to detail.
+      </div>
+    </div>
+
     <LazyHydrate when-visible>
       <SfBannerGrid :banner-grid="2" class="banner-grid">
         <template v-for="item in banners" v-slot:[item.slot]>
