@@ -6,15 +6,18 @@
       </div>
     </LazyHydrate>
 
-    <SfSection
-      titleHeading="WELCOME TO COOKE FURNITURE"
-      subtitleHeading="We specialize in the creation of stunning designer custom outdoor fire pit tables by using the finest quality stainless steel, acid washed copper and magnificent granite and marble from all over the world. The product line is constantly growing and changing as new pieces are designed.
-All stainless steel outdoor furniture products and fire pits are guaranteed to have life long structural integrity in any condition.
-Every piece is engineered to endure and manufactured in California."
-      :levelHeading="2"
-    />
-
-    <SfArrow />
+    <div class="sf-heading">
+      <h2 class="sf-heading__title h2">WELCOME TO COOKE FURNITURE</h2>
+      <div class="sf-heading__description">
+        We specialize in the creation of stunning designer custom outdoor fire
+        pit tables by using the finest quality stainless steel, acid washed
+        copper and magnificent granite and marble from all over the world. The
+        product line is constantly growing and changing as new pieces are
+        designed. All stainless steel outdoor furniture products and fire pits
+        are guaranteed to have life long structural integrity in any condition.
+        Every piece is engineered to endure and manufactured in California.
+      </div>
+    </div>
 
     <LazyHydrate when-visible>
       <SfHero class="hero">
@@ -24,12 +27,18 @@ Every piece is engineered to endure and manufactured in California."
           :background="hero.background"
           :image="hero.image"
           :class="hero.className"
+          :buttonText="hero.buttonText"
+          :link="hero.link"
         >
           <template #title>
-            <div class="hero-title">{{ hero.title }}</div>
+            <h2 class="sf-heading__title h2 hero-title">
+              {{ hero.title }}
+            </h2>
           </template>
           <template #subtitle>
-            <div class="hero-subtitle">{{ hero.subtitle }}</div>
+            <div class="hero-text sf-heading__description">
+              {{ hero.subtitle }}
+            </div>
           </template>
         </SfHeroItem>
       </SfHero>
@@ -90,7 +99,9 @@ export default {
         subtitle:
           'Our COOKE Collection is tailored to design professionals including architects and interior designers since the collection allows for full customization.',
         background: '#eceff1',
-        image: addBasePath('/homepage/Cooke-Collection-Banner.jpg')
+        image: addBasePath('/homepage/Cooke-Collection-Banner.jpg'),
+        buttonText: 'Learn More',
+        link: '/'
       },
       {
         title: 'SoCal Collection',
@@ -99,39 +110,43 @@ export default {
         background: '#efebe9',
         image: addBasePath('/homepage/SoCal-Collection-Banner.jpg'),
         className:
-          'sf-hero-item--position-bg-top-left sf-hero-item--align-right'
+          'sf-hero-item--position-bg-top-left sf-hero-item--align-right',
+        buttonText: 'Learn More',
+        link: '/'
       },
       {
         title: 'Shop Parts',
         subtitle:
           'Here we are going to need some text for the rest of the store.',
-        background: '#eceff1',
-        image: addBasePath('')
+        background: '#1f2937',
+        image: addBasePath(''),
+        buttonText: 'Shop Now',
+        link: '/category'
       }
     ];
     const banners = [
       {
         slot: 'banner-A',
-        image: addBasePath('/homepage/gallery-1.jpg'),
+        image: addBasePath('/homepage/gallery-6.jpg'),
         class: 'sf-banner--slim desktop-only',
         link: ''
       },
       {
-        slot: 'banner-B',
-        image: addBasePath('/homepage/gallery-1.jpg'),
+        slot: 'banner-C',
+        image: addBasePath('/homepage/gallery-2.jpg'),
         class: 'sf-banner--slim banner-central desktop-only',
         link: ''
       },
       {
-        slot: 'banner-C',
-        image: addBasePath('/homepage/gallery-1.jpg'),
-        class: 'sf-banner--slim banner__tshirt',
+        slot: 'banner-B',
+        image: addBasePath('/homepage/gallery-4.jpg'),
+        class: 'sf-banner--slim banner-central',
         link: ''
       },
       {
         slot: 'banner-D',
-        image: addBasePath('/homepage/gallery-1.jpg'),
-        class: 'sf-banner--slim',
+        image: addBasePath('/homepage/gallery-3.jpg'),
+        class: '',
         link: ''
       }
     ];
@@ -176,12 +191,21 @@ export default {
       }
     }
   }
-  ::v-deep .sf-hero__control {
-    &--right,
-    &--left {
-      // TODO: Change Color of Arrows
-    }
+  ::v-deep .sf-arrow {
+    --icon-color: white;
   }
+}
+
+.hero-title {
+  color: var(--c-light);
+  font-size: 2.5rem;
+  font-weight: 400;
+  padding-bottom: 0.75rem;
+}
+
+.hero-text {
+  color: var(--c-light);
+  font-size: 1.25rem;
 }
 
 .banner-grid {
