@@ -2,7 +2,7 @@
   <div id="home">
     <LazyHydrate when-visible>
       <div class="frontPageAnimation">
-        <!--  Todo: Create animation component -->
+        <app-slider :images="sliders" />
       </div>
     </LazyHydrate>
 
@@ -88,6 +88,7 @@ import {
 import LazyHydrate from 'vue-lazy-hydration';
 import cacheControl from './../helpers/cacheControl';
 import { addBasePath } from '@vue-storefront/core';
+import AppSlider from '../components/AppSlider.vue';
 
 export default {
   name: 'Home',
@@ -105,7 +106,8 @@ export default {
     SfArrow,
     SfButton,
     LazyHydrate,
-    SfIcon
+    SfIcon,
+    AppSlider
   },
   setup() {
     const heroes = [
@@ -165,11 +167,21 @@ export default {
         link: ''
       }
     ];
+    const sliders = [
+      'slideshow/2.jpg',
+      'slideshow/1.jpg',
+      'slideshow/3.jpg',
+      'slideshow/4.jpg',
+      'slideshow/5.jpg',
+      'slideshow/6.jpg',
+      'slideshow/7.png'
+    ];
 
     return {
       addBasePath,
       banners,
-      heroes
+      heroes,
+      sliders
     };
   }
 };
@@ -184,6 +196,11 @@ export default {
     padding: 0;
     margin: 0 auto;
   }
+}
+
+.frontPageAnimation {
+  position: relative;
+  margin-bottom: 3rem;
 }
 
 .hero {
