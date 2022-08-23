@@ -31,9 +31,11 @@
           :link="hero.link"
         >
           <template #title>
-            <h2 class="sf-heading__title h2 hero-title">
-              {{ hero.title }}
-            </h2>
+            <NuxtLink :to="hero.link">
+              <h2 class="sf-heading__title h2 hero-title">
+                {{ hero.title }}
+              </h2>
+            </NuxtLink>
           </template>
           <template #subtitle>
             <div class="hero-text sf-heading__description">

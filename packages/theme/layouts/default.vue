@@ -72,10 +72,10 @@ export default {
 @import '~@storefront-ui/vue/styles';
 
 :root {
-  @include generate-color-variants(--_c-slate-primary, #64748b);
-  @include generate-color-variants(--_c-slate-secondary, #cbd5e1);
-  @include assign-color-variants(--c-primary, --_c-slate-primary);
-  @include assign-color-variants(--c-primary-variant, --_c-slate-secondary);
+  @include generate-color-variants(--_c-bluesmoke-primary, #52798d);
+  @include generate-color-variants(--_c-bluesmoke-secondary, #7e9cac);
+  @include assign-color-variants(--c-primary, --_c-bluesmoke-primary);
+  @include assign-color-variants(--c-primary-variant, --_c-bluesmoke-secondary);
 }
 
 #layout {
