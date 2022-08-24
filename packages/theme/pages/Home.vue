@@ -2,7 +2,7 @@
   <div id="home">
     <LazyHydrate when-visible>
       <div class="frontPageAnimation">
-        <app-slider :images="sliders" />
+        <app-slider :slides="sliders" />
       </div>
     </LazyHydrate>
 
@@ -83,7 +83,8 @@ import {
   SfHeading,
   SfArrow,
   SfButton,
-  SfIcon
+  SfIcon,
+  SfLoader
 } from '@storefront-ui/vue';
 import LazyHydrate from 'vue-lazy-hydration';
 import cacheControl from './../helpers/cacheControl';
@@ -107,7 +108,8 @@ export default {
     SfButton,
     LazyHydrate,
     SfIcon,
-    AppSlider
+    AppSlider,
+    SfLoader
   },
   setup() {
     const heroes = [
@@ -168,13 +170,60 @@ export default {
       }
     ];
     const sliders = [
-      'slideshow/2.jpg',
-      'slideshow/1.jpg',
-      'slideshow/3.jpg',
-      'slideshow/4.jpg',
-      'slideshow/5.jpg',
-      'slideshow/6.jpg',
-      'slideshow/7.png'
+      {
+        image: addBasePath('slideshow/2.jpg'),
+        imageAnimation: 'kenburns-bottom-right',
+        title: 'Contemporary Fire Pits',
+        subtitle: 'Constructed from large format stone.',
+        captionData: 'left'
+      },
+      {
+        image: 'slideshow/1.jpg',
+        imageAnimation: 'kenburns-top',
+        title: 'Premium WindScreens',
+        subtitle: 'For residential and commercial use.',
+        captionData: 'bottom left'
+      },
+
+      {
+        image: 'slideshow/3.jpg',
+        imageAnimation: 'kenburns-bottom-left',
+        title: 'Premium Surfaces',
+        subtitle: 'Dekton, Neolith, Granite, Marble and Quartize table tops.',
+        captionData: 'bottom left'
+      },
+
+      {
+        image: 'slideshow/4.jpg',
+        imageAnimation: 'kenburns-right',
+        title: 'Withstand Oceanside Elements',
+        subtitle: 'Made from the highest quality materials.',
+        captionData: 'bottom right'
+      },
+
+      {
+        image: 'slideshow/5.jpg',
+        imageAnimation: 'kenburns-bottom-right',
+        title: 'Automated Fire Pits',
+        subtitle: 'Built for commercial and residential applications.',
+        captionData: 'left'
+      },
+
+      {
+        image: 'slideshow/6.jpg',
+        imageAnimation: 'kenburns-bottom',
+        title: 'Custom Fire Features',
+        subtitle: 'The Cooke DESIGN process is easy, fun and free.',
+        captionData: 'bottom left'
+      },
+
+      {
+        image: 'slideshow/7.png',
+        imageAnimation: 'kenburns-bottom',
+        title: 'The Perfect Match',
+        subtitle: 'Be Bold. Your Colors. Your Look.',
+        captionData: 'center'
+      }
     ];
 
     return {
