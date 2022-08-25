@@ -1,35 +1,31 @@
 <template>
   <div>
+    <TopBar
+      class="desktop-only"
+      :class="{
+        'topbar-on-top': isSearchOpen
+      }"
+    />
     <SfHeader
       class="sf-header--has-mobile-search"
       :class="{
-        'header-on-top': isSearchOpen,
+        'header-on-top': isSearchOpen
       }"
     >
-      <!-- TODO: add mobile view buttons after SFUI team PR -->
-      <template #logo>
-        <nuxt-link :to="localePath('/')" class="sf-header__logo">
-          <SfImage
-            :width="35"
-            :height="35"
-            src="/icons/logo.svg"
-            alt="Vue Storefront Next"
-            class="sf-header__logo-image"
-          />
-        </nuxt-link>
-      </template>
       <template #navigation>
-        <SfHeaderNavigationItem
-          v-for="(category, index) in filteredTopCategories"
-          :key="index"
-          data-cy="app-header-top-categories"
-          class="nav-item"
-          :label="category.name"
-          :link="localePath(`/c/${category.slug}/${category.id}`)"
-        />
+        <div v-for="(item, index) in navItems" :key="index">
+          <div v-if="item.isDropdown === true">
+            <SfMenuItem :label="item.name" :link="item.url" class="nav-item" />
+          </div>
+          <div v-else-if="item.isDropdown === false">
+            <SfMenuItem :label="item.name" :link="item.url" class="nav-item" />
+          </div>
+        </div>
       </template>
       <template #aside>
-        <LocaleSelector class="smartphone-only" />
+        <nuxt-link :to="localePath('/')" class="smartphone-only">
+          <SfImage src="/CookeFurniture.png" alt="Cooke Furniture" class="" />
+        </nuxt-link>
       </template>
       <template #header-icons>
         <div class="sf-header__icons">
@@ -108,6 +104,7 @@
       @removeSearchResults="removeSearchResults"
     />
     <SfOverlay :visible="isSearchOpen" />
+    <div><hr class="sf-divider" /></div>
   </div>
 </template>
 
@@ -119,7 +116,8 @@ import {
   SfButton,
   SfOverlay,
   SfBadge,
-  SfHeader
+  SfHeader,
+  SfMenuItem
 } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
 import {
@@ -128,7 +126,7 @@ import {
   useUser,
   cartGetters,
   categoryGetters,
-  useCategory,
+  // useCategory,
   useFacet
 } from '@vue-storefront/odoo';
 import { clickOutside } from '@storefront-ui/vue/src/utilities/directives/click-outside/click-outside-directive.js';
@@ -137,6 +135,7 @@ import { onSSR } from '@vue-storefront/core';
 import { useUiHelpers } from '~/composables';
 import LocaleSelector from './LocaleSelector';
 import SearchResults from '~/components/SearchResults';
+import TopBar from '~/components/TopBar.vue';
 
 import debounce from 'lodash.debounce';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer.js';
@@ -150,7 +149,9 @@ export default {
     LocaleSelector,
     SearchResults,
     SfOverlay,
-    SfBadge
+    SfBadge,
+    SfMenuItem,
+    TopBar
   },
   directives: { clickOutside },
   setup(props, { root }) {
@@ -167,8 +168,8 @@ export default {
     const { load: loadCart, cart } = useCart();
     const { load: loadWishlist, wishlist } = useWishlist();
     const { search: searchProductApi, result } = useFacet('AppHeader:Search');
-    const { categories: topCategories, search: searchTopCategoryApi } =
-      useCategory('AppHeader:TopCategories');
+    // const { categories: topCategories, search: searchTopCategoryApi } =
+    //   useCategory('AppHeader:TopCategories');
 
     const isMobile = computed(() => mapMobileObserver().isMobile.get());
 
@@ -227,11 +228,33 @@ export default {
       toggleLoginModal();
     };
 
-    const filteredTopCategories = computed(() =>
-      topCategories.value.filter(
-        (cat) => cat.name === 'WOMEN' || cat.name === 'MEN'
-      )
-    );
+    const navItems = [
+      {
+        name: 'COOKE COLLECTION',
+        url: '/category',
+        isDropdown: true
+      },
+      {
+        name: 'SOCAL COLLECTION',
+        url: '/category',
+        isDropdown: true
+      },
+      {
+        name: 'DESIGN',
+        url: '/category',
+        isDropdown: true
+      },
+      {
+        name: 'STORE',
+        url: '/category',
+        isDropdown: false
+      },
+      {
+        name: 'ABOUT US',
+        url: '/category',
+        isDropdown: false
+      }
+    ];
 
     watch(
       () => term.value,
@@ -249,9 +272,9 @@ export default {
 
     onSSR(async () => {
       await Promise.all([
-        searchTopCategoryApi({
-          filter: { parent: true }
-        }),
+        // searchTopCategoryApi({
+        //   filter: { parent: true }
+        // }),
         loadUser(),
         loadWishlist(),
         loadCart()
@@ -262,7 +285,7 @@ export default {
       wishlistHasItens: computed(
         () => wishlist.value?.wishlistItems.length > 0
       ),
-      filteredTopCategories,
+      navItems,
       accountIcon,
       closeOrFocusSearchBar,
       cartTotalItems,
@@ -283,7 +306,9 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped >
+<style lang="scss" scoped>
+@import '~@storefront-ui/shared/styles/components/organisms/SfHeader.scss';
+
 .sf-header {
   --header-padding: var(--spacer-sm);
   @include for-desktop {
@@ -292,20 +317,29 @@ export default {
   &__logo-image {
     height: 100%;
   }
+  ::v-deep .sf-header__navigation {
+    --header-navigation-margin: 0 auto 0 0;
+  }
 }
+
+.topbar-on-top {
+  z-index: 3;
+}
+
 .header-on-top {
   z-index: 2;
 }
 .nav-item {
-  --header-navigation-item-margin: 0 var(--spacer-base);
+  margin: 0 var(--spacer-sm);
   .sf-header-navigation-item__item--mobile {
     display: none;
   }
+  --menu-item-font-weight: var(--font-weight--medium);
+  --menu-item-count-color: var(--c-primary);
 }
 .cart-badge {
   position: absolute;
   bottom: 40%;
   left: 40%;
 }
-</style>
 </style>

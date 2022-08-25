@@ -1,10 +1,8 @@
 <template>
   <div>
     <LazyHydrate when-visible>
-      <TopBar class="desktop-only" />
+      <AppHeader />
     </LazyHydrate>
-
-    <AppHeader />
 
     <div id="layout">
       <nuxt :key="route.fullPath" />
