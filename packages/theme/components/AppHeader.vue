@@ -15,10 +15,17 @@
       <template #navigation>
         <div v-for="(item, index) in navItems" :key="index">
           <div v-if="item.isDropdown === true">
-            <SfMenuItem :label="item.name" :link="item.url" class="nav-item" />
+            <NavDropdown
+              :title="item.name"
+              :titleUrl="item.url"
+              :options="item.dropdownOptions"
+            />
           </div>
           <div v-else-if="item.isDropdown === false">
-            <SfMenuItem :label="item.name" :link="item.url" class="nav-item" />
+            <NuxtLink :to="item.url" class="sf-menu-item__label nav-item">{{
+              item.name
+            }}</NuxtLink>
+            <!-- <SfMenuItem :label="item.name" :link="item.url" class="nav-item" /> -->
           </div>
         </div>
       </template>
@@ -136,6 +143,7 @@ import { useUiHelpers } from '~/composables';
 import LocaleSelector from './LocaleSelector';
 import SearchResults from '~/components/SearchResults';
 import TopBar from '~/components/TopBar.vue';
+import NavDropdown from '/components/UI/NavDropdown';
 
 import debounce from 'lodash.debounce';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer.js';
@@ -151,7 +159,8 @@ export default {
     SfOverlay,
     SfBadge,
     SfMenuItem,
-    TopBar
+    TopBar,
+    NavDropdown
   },
   directives: { clickOutside },
   setup(props, { root }) {
@@ -232,17 +241,71 @@ export default {
       {
         name: 'COOKE COLLECTION',
         url: '/category',
-        isDropdown: true
+        isDropdown: true,
+        dropdownOptions: [
+          {
+            name: 'test1',
+            url: 'example9.com'
+          },
+          {
+            name: 'test2',
+            url: 'example0.com'
+          },
+          {
+            name: 'test3',
+            url: 'example01.com'
+          },
+          {
+            name: 'test4',
+            url: 'example02.com'
+          }
+        ]
       },
       {
         name: 'SOCAL COLLECTION',
         url: '/category',
-        isDropdown: true
+        isDropdown: true,
+        dropdownOptions: [
+          {
+            name: 'test5',
+            url: 'example1.com'
+          },
+          {
+            name: 'test6',
+            url: 'example2.com'
+          },
+          {
+            name: 'test7',
+            url: 'example3.com'
+          },
+          {
+            name: 'test8',
+            url: 'example4.com'
+          }
+        ]
       },
       {
         name: 'DESIGN',
         url: '/category',
-        isDropdown: true
+        isDropdown: true,
+        dropdownOptions: [
+          {
+            name: 'test5',
+            url: 'example5.com'
+          },
+          {
+            name: 'test6',
+            url: 'example6.com'
+          },
+          {
+            name: 'test7',
+            url: 'example7.com'
+          },
+          {
+            name: 'test8',
+            url: 'example8.com'
+          }
+        ]
       },
       {
         name: 'STORE',
@@ -331,11 +394,10 @@ export default {
 }
 .nav-item {
   margin: 0 var(--spacer-sm);
-  .sf-header-navigation-item__item--mobile {
-    display: none;
-  }
-  --menu-item-font-weight: var(--font-weight--medium);
-  --menu-item-count-color: var(--c-primary);
+  color: var(--c-link);
+}
+.nav-item:hover {
+  color: var(--c-primary);
 }
 .cart-badge {
   position: absolute;
