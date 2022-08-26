@@ -2,15 +2,31 @@
   <SfTopBar class="topbar">
     <template #left>
       <div class="spacer">
-        <SfButton class="sf-button--text">{{
-          $t('Here will be SM icons')
-        }}</SfButton>
+        <div style="display: flex; justify-content: space-between; width: 8rem">
+          <SfLink
+            v-for="item in social"
+            :key="item.url"
+            :link="item.url"
+            target="_blank"
+          >
+            <SfImage
+              :src="addBasePath('/icons/' + item.name + '.svg')"
+              :alt="item.name"
+              :width="16"
+              :height="16"
+            />
+          </SfLink>
+        </div>
       </div>
     </template>
 
     <template #center>
       <nuxt-link :to="localePath('/')" class="">
-        <SfImage src="/CookeFurniture.png" alt="Cooke Furniture" class="" />
+        <SfImage
+          src="/CookeFurniture.png"
+          alt="Cooke Furniture"
+          style="padding-right: 4rem"
+        />
       </nuxt-link>
     </template>
     <template #right>
@@ -20,13 +36,42 @@
 </template>
 
 <script>
-import { SfButton, SfTopBar, SfImage } from '@storefront-ui/vue';
+import { SfButton, SfTopBar, SfImage, SfLink } from '@storefront-ui/vue';
+import { addBasePath } from '@vue-storefront/core';
 
 export default {
   components: {
     SfTopBar,
     SfButton,
-    SfImage
+    SfImage,
+    SfLink
+  },
+  setup() {
+    return {
+      addBasePath
+    };
+  },
+  data() {
+    return {
+      social: [
+        {
+          name: 'facebook',
+          url: 'https://www.facebook.com/firepittables'
+        },
+        {
+          name: 'instagram',
+          url: 'https://instagram.com/cookefurniture/'
+        },
+        {
+          name: 'linkedin-in',
+          url: 'https://www.linkedin.com/company/cooke-furniture'
+        },
+        {
+          name: 'twitter',
+          url: 'https://twitter.com/CookeFurniture'
+        }
+      ]
+    };
   }
 };
 </script>
