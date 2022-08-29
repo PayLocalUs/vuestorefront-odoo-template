@@ -7,51 +7,38 @@
       @close="backMenu"
       class="sidebar sf-sidebar--right"
     >
-      <template v-if="!isChildsOpened">
-        <SfHeaderNavigationItem
-          v-for="(category, index) in navItems"
-          :key="index"
-          data-cy="app-header-top-categories"
-          class="nav-item"
-          :label="category.name"
-          @click="openChilds(category.name)"
-        />
-      </template>
-
       <SfLoader :class="{ loading }" :loading="loading">
-        <SfAccordion showChevron transition="sf-expand" v-if="isChildsOpened">
+        <SfAccordion showChevron transition="sf-expand">
           <SfAccordionItem
-            v-for="(cat, i) in categoryTree.items"
+            v-for="(item, i) in accordion"
             :key="i"
-            :header="cat.label"
+            :header="item.name"
           >
             <template>
               <SfList class="list">
                 <SfListItem
                   class="list__item"
-                  v-for="(subCat, j) in cat.items"
+                  v-for="(option, j) in item.options"
                   :key="j"
                 >
-                  <SfMenuItem
-                    :count="subCat.count || ''"
-                    :data-cy="`category-link_subcategory_${subCat.slug}`"
-                    :label="subCat.label"
-                  >
-                    <template #label="{ label }">
-                      <a
-                        @click="goToSubCategory(subCat)"
-                        :class="subCat.isCurrent ? 'sidebar--cat-selected' : ''"
-                      >
-                        {{ label }}
-                      </a>
-                    </template>
-                  </SfMenuItem>
+                  <SfMenuItem :label="option.name" :link="option.url" />
                 </SfListItem>
               </SfList>
             </template>
           </SfAccordionItem>
 
-          <!--      TODO: Categories for general shop
+          <!--           TODO: Refactor with working categories?
+
+          <template v-if="!isChildsOpened">
+            <SfHeaderNavigationItem
+              v-for="(category, index) in navItems"
+              :key="index"
+              data-cy="app-header-top-categories"
+              class="nav-item"
+              :label="category.name"
+              @click="openChilds(category.name)"
+            />
+          </template>
           <SfAccordionItem
             v-for="(cat, i) in categoryTree.items"
             :key="i"
@@ -84,6 +71,9 @@
           </SfAccordionItem> -->
         </SfAccordion>
       </SfLoader>
+      <div style="margin-top: 2rem">
+        <SfMenuItem label="ABOUT US" link="/about-us" />
+      </div>
     </SfSidebar>
   </div>
 </template>
@@ -169,12 +159,14 @@ export default defineComponent({
 
     onSSR(async () => {});
 
-    const navItems = [
+    const accordion = [
       {
         name: 'COOKE COLLECTION',
-        url: '/category',
-        isDropdown: true,
-        dropdownOptions: [
+        options: [
+          {
+            name: 'Explore Cooke Collection',
+            url: 'example9.com'
+          },
           {
             name: 'Fire Pit Tables',
             url: 'example9.com'
@@ -207,9 +199,11 @@ export default defineComponent({
       },
       {
         name: 'SOCAL COLLECTION',
-        url: '/category',
-        isDropdown: true,
-        dropdownOptions: [
+        options: [
+          {
+            name: 'Explore SoCal Collection',
+            url: 'example9.com'
+          },
           {
             name: 'Santa Barbara Fire Pit Table',
             url: 'example1.com'
@@ -242,9 +236,7 @@ export default defineComponent({
       },
       {
         name: 'DESIGN',
-        url: '/category',
-        isDropdown: true,
-        dropdownOptions: [
+        options: [
           {
             name: 'Finishes and Accesories',
             url: 'example5.com'
@@ -273,17 +265,36 @@ export default defineComponent({
       },
       {
         name: 'STORE',
-        url: '/category',
-        isDropdown: false
-      },
+        options: [
+          {
+            name: 'View all Categories',
+            url: 'example5.com'
+          },
+          {
+            name: 'These are just',
+            url: 'example6.com'
+          },
+          {
+            name: 'Example Categories',
+            url: 'example7.com'
+          },
+          {
+            name: 'Need to Implement',
+            url: 'example8.com'
+          }
+        ]
+      }
+    ];
+
+    const navItems = [
       {
         name: 'ABOUT US',
-        url: '/category',
-        isDropdown: false
+        url: '/category'
       }
     ];
 
     return {
+      accordion,
       navItems,
       currentParentMenu,
       goToSubCategory,
