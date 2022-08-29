@@ -8,6 +8,7 @@
       <nuxt :key="route.fullPath" />
 
       <BottomNavigation />
+      <MobileMenuSidebar />
       <CartSidebar />
       <WishlistSidebar />
       <LoginModal />
@@ -24,6 +25,7 @@ import AppHeader from '~/components/AppHeader.vue';
 import BottomNavigation from '~/components/BottomNavigation.vue';
 import AppFooter from '~/components/AppFooter.vue';
 import TopBar from '~/components/TopBar.vue';
+import MobileMenuSidebar from '~/components/MobileMenuSidebar.vue';
 import CartSidebar from '~/components/CartSidebar.vue';
 import WishlistSidebar from '~/components/WishlistSidebar.vue';
 import LoginModal from '~/components/LoginModal.vue';
@@ -42,6 +44,7 @@ export default {
     AppHeader,
     BottomNavigation,
     AppFooter,
+    MobileMenuSidebar,
     CartSidebar,
     WishlistSidebar,
     LoginModal,
