@@ -1,19 +1,22 @@
 <template>
   <dropdown-menu
-    class="dropdown"
+    class="custom-style"
     transition="zoom"
     @opened="writeToConsoleForOpened"
     @closed="writeToConsoleForClosed"
     mode="hover"
   >
     <button slot="trigger">
-      <NuxtLink :to="titleUrl" class="sf-menu-item__label nav-item">{{
-        title
-      }}</NuxtLink>
+      <NuxtLink :to="titleUrl" class="sf-menu-item__label nav-item">
+        {{ title }}
+        <span class="carret">⌄</span>
+      </NuxtLink>
     </button>
-    <ul slot="body">
+    <ul slot="body" class="dropdown-body">
       <li v-for="option in options" :key="option.url">
-        <a :href="option.url" class="dropdown-option">{{ option.name }}</a>
+        <NuxtLink :to="option.url" class="dropdown-option">{{
+          option.name
+        }}</NuxtLink>
       </li>
     </ul>
   </dropdown-menu>
@@ -21,10 +24,12 @@
 
 <script>
 import DropdownMenu from 'v-dropdown-menu';
-import 'v-dropdown-menu/dist/v-dropdown-menu.css';
+import { Sficon } from '@storefront-ui/vue';
+
 export default {
   components: {
-    DropdownMenu
+    DropdownMenu,
+    Sficon
   },
   props: {
     title: String,
@@ -41,7 +46,20 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+@import 'v-dropdown-menu/dist/v-dropdown-menu.css';
+.v-dropdown-menu {
+  $this: &;
+  &.custom-style & {
+    &__container {
+      border: 1px solid var(--c-primary);
+      border-radius: 2px;
+      transform: translate(12px, 6px);
+      min-width: 180px;
+    }
+  }
+}
+
 .nav-item {
   margin: 0 var(--spacer-sm);
   color: var(--c-link);
@@ -53,7 +71,7 @@ export default {
   display: flex;
   box-sizing: border-box;
   align-items: center;
-  padding: var(--component-select-option-padding, var(--spacer-sm));
+  padding: 1rem;
   background: var(--component-select-option-background);
   color: inherit;
   min-height: var(
@@ -76,5 +94,8 @@ export default {
       --component-select-option-background: rgba(var(--c-gray-base), 0.1);
     }
   }
+}
+.carret {
+  padding-left: 0.5rem;
 }
 </style>

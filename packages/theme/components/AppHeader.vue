@@ -25,7 +25,6 @@
             <NuxtLink :to="item.url" class="sf-menu-item__label nav-item">{{
               item.name
             }}</NuxtLink>
-            <!-- <SfMenuItem :label="item.name" :link="item.url" class="nav-item" /> -->
           </div>
         </div>
       </template>
@@ -111,7 +110,6 @@
       @removeSearchResults="removeSearchResults"
     />
     <SfOverlay :visible="isSearchOpen" />
-    <div><hr class="sf-divider" /></div>
   </div>
 </template>
 
@@ -244,19 +242,31 @@ export default {
         isDropdown: true,
         dropdownOptions: [
           {
-            name: 'test1',
+            name: 'Fire Pit Tables',
             url: 'example9.com'
           },
           {
-            name: 'test2',
+            name: 'Furniture',
             url: 'example0.com'
           },
           {
-            name: 'test3',
+            name: 'Glass Windscreens',
             url: 'example01.com'
           },
           {
-            name: 'test4',
+            name: 'BBQ Islands',
+            url: 'example02.com'
+          },
+          {
+            name: 'Planters',
+            url: 'example02.com'
+          },
+          {
+            name: 'Fire Features',
+            url: 'example02.com'
+          },
+          {
+            name: 'Fire Pit Burners',
             url: 'example02.com'
           }
         ]
@@ -267,20 +277,32 @@ export default {
         isDropdown: true,
         dropdownOptions: [
           {
-            name: 'test5',
+            name: 'Santa Barbara Fire Pit Table',
             url: 'example1.com'
           },
           {
-            name: 'test6',
+            name: 'Santa Barbara Lounge Table',
             url: 'example2.com'
           },
           {
-            name: 'test7',
+            name: 'Parkway Firepit Table',
             url: 'example3.com'
           },
           {
-            name: 'test8',
+            name: 'Palisades Fire Pit Table',
             url: 'example4.com'
+          },
+          {
+            name: 'Olympic Fire Pit Table',
+            url: 'example02.com'
+          },
+          {
+            name: 'Costa Mesa Fire Pit Table',
+            url: 'example02.com'
+          },
+          {
+            name: 'Miami Fire Pit Table',
+            url: 'example02.com'
           }
         ]
       },
@@ -290,20 +312,28 @@ export default {
         isDropdown: true,
         dropdownOptions: [
           {
-            name: 'test5',
+            name: 'Finishes and Accesories',
             url: 'example5.com'
           },
           {
-            name: 'test6',
+            name: 'Custom Products',
             url: 'example6.com'
           },
           {
-            name: 'test7',
+            name: 'Ideas Book',
             url: 'example7.com'
           },
           {
-            name: 'test8',
+            name: 'Videos',
             url: 'example8.com'
+          },
+          {
+            name: 'Manuals',
+            url: 'example02.com'
+          },
+          {
+            name: 'Product Specs',
+            url: 'example02.com'
           }
         ]
       },
