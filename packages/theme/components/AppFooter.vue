@@ -236,7 +236,7 @@ export default {
   data() {
     return {
       aboutUs: [
-        { name: 'About Cooke', url: '/about-us' },
+        { name: 'About Cooke', url: '/about' },
         { name: 'Contact', url: '/contact' },
         { name: 'Sitemap', url: '/sitemap' }
       ],

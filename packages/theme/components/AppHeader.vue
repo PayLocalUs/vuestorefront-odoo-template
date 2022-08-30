@@ -344,7 +344,7 @@ export default {
       },
       {
         name: 'ABOUT US',
-        url: '/category',
+        url: '/about',
         isDropdown: false
       }
     ];

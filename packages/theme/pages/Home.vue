@@ -2,7 +2,7 @@
   <div id="home">
     <LazyHydrate when-visible>
       <div class="frontPageAnimation">
-        <app-slider :slides="sliders" />
+        <!-- <app-slider :slides="sliders" /> -->
       </div>
     </LazyHydrate>
 

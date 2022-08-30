@@ -21,7 +21,11 @@
                   v-for="(option, j) in item.options"
                   :key="j"
                 >
-                  <SfMenuItem :label="option.name" :link="option.url" />
+                  <SfMenuItem :label="option.name" :link="option.url">
+                    <template #label>
+                      <a @click="toggleMenu"> {{ option.name }} </a>
+                    </template>
+                  </SfMenuItem>
                 </SfListItem>
               </SfList>
             </template>
@@ -72,7 +76,11 @@
         </SfAccordion>
       </SfLoader>
       <div style="margin-top: 2rem">
-        <SfMenuItem label="ABOUT US" link="/about-us" />
+        <SfMenuItem label="ABOUT US" link="/about">
+          <template #label>
+            <a @click="toggleMenu"> ABOUT US </a>
+          </template>
+        </SfMenuItem>
       </div>
     </SfSidebar>
   </div>
@@ -154,6 +162,10 @@ export default defineComponent({
 
     const goToSubCategory = (subCategory) => {
       router.push(getCatLink(subCategory));
+      toggleMobileMenu();
+    };
+
+    const toggleMenu = () => {
       toggleMobileMenu();
     };
 
@@ -308,7 +320,8 @@ export default defineComponent({
       isAuthenticated,
       isMobileMenuOpen,
       toggleMobileMenu,
-      productGetters
+      productGetters,
+      toggleMenu
     };
   }
 });
