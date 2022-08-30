@@ -24,12 +24,10 @@
 
 <script>
 import DropdownMenu from 'v-dropdown-menu';
-import { Sficon } from '@storefront-ui/vue';
 
 export default {
   components: {
-    DropdownMenu,
-    Sficon
+    DropdownMenu
   },
   props: {
     title: String,

@@ -1,52 +1,11 @@
 <template>
-  <SfFooter :column="4" multiple class="footer">
-    <SfFooterColumn :title="$t('About us')">
-      <SfList>
-        <SfListItem v-for="item in aboutUs" :key="item">
-          <SfMenuItem :label="$t(item)" />
-        </SfListItem>
-      </SfList>
-    </SfFooterColumn>
-    <SfFooterColumn :title="$t('Departments')">
-      <SfList>
-        <SfListItem v-for="item in departments" :key="item">
-          <SfMenuItem :label="$t(item)" />
-        </SfListItem>
-      </SfList>
-    </SfFooterColumn>
-    <SfFooterColumn :title="$t('Help')">
-      <SfList>
-        <SfListItem v-for="item in help" :key="item">
-          <SfMenuItem :label="$t(item)" />
-        </SfListItem>
-      </SfList>
-    </SfFooterColumn>
-    <SfFooterColumn :title="$t('Payment & Delivery')">
-      <SfList>
-        <SfListItem v-for="item in paymentsDelivery" :key="item">
-          <SfMenuItem :label="$t(item)" />
-        </SfListItem>
-      </SfList>
-    </SfFooterColumn>
-    <SfFooterColumn title="Social" class="desktop-only">
-      <div class="footer__socials">
-        <SfImage
-          class="footer__social-image"
-          v-for="item in social"
-          :key="item"
-          :src="addBasePath('/icons/' + item + '.svg')"
-          :alt="item"
-          :width="32"
-          :height="32"
-        />
-      </div>
-    </SfFooterColumn>
-
-    <SfFooterColumn title="Language" class="desktop-only">
-      <LocaleSelector />
-    </SfFooterColumn>
-
+  <SfFooter :column="2" multiple class="footer" :open="['About']">
     <SfFooterColumn class="desktop-only">
+      <nuxt-link :to="localePath('/')" class="">
+        <SfImage src="/footer-logo.png" alt="Cooke Furniture" />
+      </nuxt-link>
+    </SfFooterColumn>
+    <SfFooterColumn class="desktop-only" title="Subscribe to our newsletter">
       <template>
         <ValidationObserver v-slot="{ handleSubmit }" key="log-in">
           <form
@@ -78,6 +37,42 @@
         </ValidationObserver>
       </template>
     </SfFooterColumn>
+    <SfFooterColumn :title="$t('About')">
+      <SfList>
+        <SfListItem v-for="item in aboutUs" :key="item.url">
+          <SfMenuItem :label="$t(item.name)" :link="item.url" />
+        </SfListItem>
+      </SfList>
+    </SfFooterColumn>
+    <SfFooterColumn title="Social" class="desktop-only">
+      <div class="footer__socials">
+        <SfLink
+          v-for="item in social"
+          :key="item.url"
+          class="sf-circle-icon color-light sf-button"
+          style="margin-right: 1.25rem"
+          :aria-disabled="false"
+          :link="item.url"
+          aria-label="button-icon"
+        >
+          <span style="margin-top: 0.2rem"
+            ><SfImage
+              :src="addBasePath('/icons/' + item.name + '.svg')"
+              :alt="item.name"
+              :width="24"
+              :height="24"
+          /></span>
+        </SfLink>
+      </div>
+    </SfFooterColumn>
+    <div class="footer-text" style="padding-right: 2rem">
+      David Cooke Industries LLC - 80 Running Iron Road Bishop, CA 93514 |
+      Phone: (888) 303-2453 |
+    </div>
+    <div class="footer-text">
+      © 2022 COOKE FURNITURE - All Rights Reserved | Terms and Conditions |
+      Policies
+    </div>
     <div class="sf-footer-column smartphone-only">
       <div
         style="
@@ -102,14 +97,23 @@
             margin-bottom: 32px;
           "
         >
-          <SfImage
-            v-for="picture in social"
-            :key="picture"
-            :src="addBasePath('/icons/' + picture + '.svg')"
-            :alt="picture"
-            :width="32"
-            :height="32"
-          />
+          <SfLink
+            v-for="item in social"
+            :key="item.url"
+            class="sf-circle-icon color-light sf-button"
+            style="margin-right: 1.25rem"
+            :aria-disabled="false"
+            :link="item.url"
+            aria-label="button-icon"
+          >
+            <span style="margin-top: 0.2rem"
+              ><SfImage
+                :src="addBasePath('/icons/' + item.name + '.svg')"
+                :alt="item.name"
+                :width="24"
+                :height="24"
+            /></span>
+          </SfLink>
         </div>
         <div
           style="
@@ -119,30 +123,47 @@
             margin-bottom: 38px;
           "
         >
-          <SfInput
-            id="email-smartphone"
-            name="email-smartphone"
-            class="sf-input--outline"
-            type="text"
-            placeholder="Type your email address"
-            style="
-              width: 242px;
-              min-height: auto;
-              height: 32px;
-              font-size: 16px;
-              color: #43464e;
-              background-color: #f1f2f3;
-              --input-border-color: #f1f2f3;
-            "
-          />
-          <SfButton style="width: 116px; height: 32px">Subscribe</SfButton>
+          <template>
+            <ValidationObserver v-slot="{ handleSubmit }" key="log-in">
+              <form
+                @submit.prevent="handleSubmit(onSubscribe)"
+                style="display: flex; height: 46px"
+              >
+                <ValidationProvider rules="required|email" v-slot="{ errors }">
+                  <SfInput
+                    id="email-smartphone"
+                    name="email-smartphone"
+                    class="sf-input--outline"
+                    type="text"
+                    :valid="!errors[0]"
+                    v-model="emailAddress"
+                    :errorMessage="errors[0]"
+                    placeholder="Type your email address"
+                    style="
+                      width: 242px;
+                      min-height: auto;
+                      height: 32px;
+                      font-size: 16px;
+                      color: #43464e;
+                      background-color: #f1f2f3;
+                      --input-border-color: #f1f2f3;
+                    "
+                  />
+                </ValidationProvider>
+                <SfButton
+                  style="width: 116px; height: 32px"
+                  type="submit"
+                  :disabled="loading"
+                  >Subscribe</SfButton
+                >
+              </form>
+            </ValidationObserver>
+          </template>
         </div>
         <SfLink link="#">
           <SfImage
-            src="/icons/logo.svg"
+            src="/footer-logo.png"
             alt="logo"
-            :width="20"
-            :height="20"
             class="sf-footer__bottom-logo"
             style="margin-bottom: 38px"
           />
@@ -214,11 +235,29 @@ export default {
   },
   data() {
     return {
-      aboutUs: ['Who we are', 'Quality in the details', 'Customer Reviews'],
-      departments: ['Women fashion', 'Men fashion', 'Kidswear', 'Home'],
-      help: ['Customer service', 'Size guide', 'Contact us'],
-      paymentsDelivery: ['Purchase terms', 'Guarantee'],
-      social: ['facebook', 'pinterest', 'google', 'twitter', 'youtube'],
+      aboutUs: [
+        { name: 'About Cooke', url: '/about-us' },
+        { name: 'Contact', url: '/contact' },
+        { name: 'Sitemap', url: '/sitemap' }
+      ],
+      social: [
+        {
+          name: 'facebook',
+          url: 'https://www.facebook.com/firepittables'
+        },
+        {
+          name: 'instagram',
+          url: 'https://instagram.com/cookefurniture/'
+        },
+        {
+          name: 'linkedin-in',
+          url: 'https://www.linkedin.com/company/cooke-furniture'
+        },
+        {
+          name: 'twitter',
+          url: 'https://twitter.com/CookeFurniture'
+        }
+      ],
       isMobile: false,
       desktopMin: 1024
     };
@@ -260,5 +299,10 @@ export default {
       margin: 0 auto;
     }
   }
+}
+.footer-text {
+  color: var(--c-white);
+  font-size: var(--font-size--xs);
+  padding-bottom: 3.75rem;
 }
 </style>
