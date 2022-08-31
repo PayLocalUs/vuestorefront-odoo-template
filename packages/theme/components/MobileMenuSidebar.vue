@@ -21,11 +21,13 @@
                   v-for="(option, j) in item.options"
                   :key="j"
                 >
-                  <SfMenuItem :label="option.name" :link="option.url">
-                    <template #label>
-                      <a @click="toggleMenu"> {{ option.name }} </a>
-                    </template>
-                  </SfMenuItem>
+                  <NuxtLink
+                    :to="option.url"
+                    v-on:click.native="toggleMenu"
+                    class="sf-menu-item__label nav-item"
+                  >
+                    {{ option.name }}
+                  </NuxtLink>
                 </SfListItem>
               </SfList>
             </template>
@@ -76,11 +78,13 @@
         </SfAccordion>
       </SfLoader>
       <div style="margin-top: 2rem">
-        <SfMenuItem label="ABOUT US" link="/about">
-          <template #label>
-            <a @click="toggleMenu"> ABOUT US </a>
-          </template>
-        </SfMenuItem>
+        <NuxtLink
+          to="/about"
+          v-on:click.native="toggleMenu"
+          class="sf-menu-item__label nav-item"
+        >
+          ABOUT US
+        </NuxtLink>
       </div>
     </SfSidebar>
   </div>
@@ -301,7 +305,7 @@ export default defineComponent({
     const navItems = [
       {
         name: 'ABOUT US',
-        url: '/category'
+        url: '/about'
       }
     ];
 
