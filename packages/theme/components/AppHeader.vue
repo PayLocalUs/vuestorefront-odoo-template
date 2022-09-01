@@ -3,16 +3,16 @@
     <TopBar
       class="desktop-only"
       :class="{
-        'topbar-on-top': isSearchOpen
+        'topbar-on-top': isSearchOpen || isMegaMenuOpen
       }"
     />
     <SfHeader
       class="sf-header--has-mobile-search"
       :class="{
-        'header-on-top': isSearchOpen
+        'header-on-top': isSearchOpen || isMegaMenuOpen
       }"
     >
-      <template #navigation>
+      <template #navigation v-if="isMegaMenu === false">
         <div v-for="(item, index) in navItems" :key="index">
           <div v-if="item.isDropdown === true">
             <NavDropdown
@@ -27,6 +27,13 @@
             }}</NuxtLink>
           </div>
         </div>
+      </template>
+      <template #navigation v-else="isMegaMenu === true">
+        <SfHeaderNavigationItem
+          class="nav-item"
+          label="Test"
+          @mouseover="isMegaMenuOpen = true"
+        />
       </template>
       <template #aside>
         <nuxt-link :to="localePath('/')" class="smartphone-only">
@@ -43,16 +50,6 @@
           </SfButton>
           <SfButton
             class="sf-button--pure sf-header__action"
-            @click="toggleWishlistSidebar"
-          >
-            <SfIcon
-              class="sf-header__icon"
-              :icon="wishlistHasItens ? 'heart_fill' : 'heart'"
-              size="1.25rem"
-            />
-          </SfButton>
-          <SfButton
-            class="sf-button--pure sf-header__action"
             @click="toggleCartSidebar"
           >
             <SfIcon class="sf-header__icon" icon="empty_cart" size="1.25rem" />
@@ -62,6 +59,16 @@
               class="sf-badge--number cart-badge"
               >{{ cartTotalItems }}</SfBadge
             >
+          </SfButton>
+          <SfButton
+            class="sf-button--pure sf-header__action"
+            @click="toggleMegaMenu"
+          >
+            <SfIcon
+              class="sf-header__icon"
+              :icon="isMegaMenu ? 'list' : 'tiles'"
+              size="1.25rem"
+            />
           </SfButton>
         </div>
       </template>
@@ -110,6 +117,13 @@
       @removeSearchResults="removeSearchResults"
     />
     <SfOverlay :visible="isSearchOpen" />
+    <MegaMenu
+      :visible="isMegaMenuOpen"
+      :result="formatedResult"
+      @close="closeMegaMenu"
+      @mouseleave="closeMegaMenu"
+    />
+    <SfOverlay :visible="isMegaMenuOpen" />
   </div>
 </template>
 
@@ -142,6 +156,7 @@ import LocaleSelector from './LocaleSelector';
 import SearchResults from '~/components/SearchResults';
 import TopBar from '~/components/TopBar.vue';
 import NavDropdown from '/components/UI/NavDropdown';
+import MegaMenu from '~/components/MegaMenu';
 
 import debounce from 'lodash.debounce';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer.js';
@@ -158,14 +173,25 @@ export default {
     SfBadge,
     SfMenuItem,
     TopBar,
-    NavDropdown
+    NavDropdown,
+    MegaMenu
   },
   directives: { clickOutside },
   setup(props, { root }) {
+    const consoleLog = () => {
+      console.log('Its working');
+    };
+
     const searchBarRef = ref(null);
     const term = ref(null);
     const formatedResult = ref(null);
     const isSearchOpen = ref(false);
+    const isMegaMenu = ref(true);
+    const isMegaMenuOpen = ref(false);
+
+    const toggleMegaMenu = () => {
+      isMegaMenu.value = !isMegaMenu.value;
+    };
 
     const { changeSearchTerm } = useUiHelpers();
     const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal } =
@@ -196,6 +222,12 @@ export default {
       if (!isSearchOpen.value) return;
       term.value = '';
       isSearchOpen.value = false;
+    };
+
+    const closeMegaMenu = () => {
+      if (!isMegaMenuOpen.value) return;
+      term.value = '';
+      isMegaMenuOpen.value = false;
     };
 
     const handleSearch = debounce(async (paramValue) => {
@@ -393,7 +425,12 @@ export default {
       term,
       isMobile,
       handleSearch,
-      closeSearch
+      closeSearch,
+      closeMegaMenu,
+      isMegaMenu,
+      toggleMegaMenu,
+      isMegaMenuOpen,
+      consoleLog
     };
   }
 };

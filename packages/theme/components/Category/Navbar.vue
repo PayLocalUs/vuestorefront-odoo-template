@@ -1,4 +1,3 @@
-
 <template>
   <div class="navbar section">
     <div class="navbar__aside desktop-only">
@@ -85,7 +84,7 @@
   </div>
 </template>
 
-<script >
+<script>
 import { computed, useRoute } from '@nuxtjs/composition-api';
 import { facetGetters } from '@vue-storefront/odoo';
 import { defineComponent } from '@vue/composition-api';
