@@ -7,19 +7,18 @@ export default {
     port: 3000,
     host: '0.0.0.0'
   },
-  components: [
-    '~/components/'
-  ],
+  components: ['~/components/'],
   css: ['@/assets/styles.scss'],
   head: {
-    title: 'Vue Storefront Odoo Integration',
+    title: 'Cooke Contemporary Furniture',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
         hid: 'description',
         name: 'description',
-        content: 'This project is a Odoo integration with Vue Storefront 2. This integration is being developed and maintained by ODOOGAP / PROMPTEQUATION'
+        content:
+          'This project is a Odoo integration with Vue Storefront 2. This integration is being developed and maintained by ODOOGAP / PROMPTEQUATION'
       }
     ],
     link: [
@@ -35,14 +34,12 @@ export default {
       },
       {
         rel: 'preload',
-        href:
-          'https://fonts.googleapis.com/css?family=Raleway:300,400,400i,500,600,700|Roboto:300,300i,400,400i,500,700&display=swap',
+        href: 'https://fonts.googleapis.com/css?family=Raleway:300,400,400i,500,600,700|Roboto:300,300i,400,400i,500,700&display=swap',
         as: 'style'
       },
       {
         rel: 'stylesheet',
-        href:
-          'https://fonts.googleapis.com/css?family=Raleway:300,400,400i,500,600,700|Roboto:300,300i,400,400i,500,700&display=swap',
+        href: 'https://fonts.googleapis.com/css?family=Raleway:300,400,400i,500,600,700|Roboto:300,300i,400,400i,500,700&display=swap',
         media: 'print',
         onload: 'this.media=\'all\''
       }
@@ -92,9 +89,7 @@ export default {
           httpPush: true,
           purgeCSS: {
             enabled: false,
-            paths: [
-              '**/*.vue'
-            ]
+            paths: ['**/*.vue']
           }
         },
         // @core-development-only-start
@@ -106,11 +101,13 @@ export default {
         }
       }
     ]
-
   ],
   publicRuntimeConfig: {
     theme,
-    baseURL: process.env.PUBLIC_PATH || process.env.BASE_URL || 'https://vsfdemo.labs.odoogap.com/'
+    baseURL:
+      process.env.PUBLIC_PATH ||
+      process.env.BASE_URL ||
+      'https://vsfdemo.labs.odoogap.com/'
   },
   modules: [
     '@nuxtjs/pwa',
@@ -141,9 +138,12 @@ export default {
         ]
       }
     ],
-    ['nuxt-i18n', {
-      baseUrl: process.env.BASE_URL || 'http://localhost:3000'
-    }]
+    [
+      'nuxt-i18n',
+      {
+        baseUrl: process.env.BASE_URL || 'http://localhost:3000'
+      }
+    ]
   ],
   nuxtPrecompress: {
     enabled: true,
