@@ -1,5 +1,5 @@
 <template>
-  <SfTopBar class="topbar">
+  <SfTopBar class="topbar" :class="{ 'add-padding': isMegaMenu === false }">
     <template #left>
       <div class="spacer">
         <div style="display: flex; justify-content: space-between; width: 8rem">
@@ -97,11 +97,13 @@ export default {
   position: relative;
   z-index: 1;
   background-color: var(--c-white);
-  padding-top: var(--spacer-base);
-  padding-bottom: var(--spacer-sm);
   &__button {
     margin: 0 0 0 var(--spacer-xs);
   }
+}
+.add-padding {
+  padding-top: var(--spacer-base);
+  padding-bottom: var(--spacer-sm);
 }
 .spacer {
   margin-left: var(--spacer-sm);

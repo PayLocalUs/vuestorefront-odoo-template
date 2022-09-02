@@ -1,130 +1,58 @@
 <template>
   <div @mouseleave="$emit('close')">
-    <SfMegaMenu
-      :visible="isMegaMenuOpen"
-      :title="$t('Search results')"
-      class="search"
-    >
-      <transition name="sf-fade" mode="out-in">
-        <div
-          v-if="products && products.length > 0"
-          key="results"
-          class="search__wrapper-results"
-        >
-          <SfMegaMenuColumn
-            :title="$t('Categories')"
-            class="sf-mega-menu-column--pined-content-on-mobile search__categories"
-          >
-            <template #title="{ title }">
-              <SfMenuItem :label="title" @click="megaMenu.changeActive(title)">
-                <template #mobile-nav-icon> &#8203; </template>
-              </SfMenuItem>
-            </template>
-            <SfList v-if="categories.length">
-              <SfListItem v-for="(category, key) in categories" :key="key">
-                <SfMenuItem
-                  :label="category.label"
-                  :link="uiHelper.getCatLinkForSearch(category)"
-                >
-                  <template #mobile-nav-icon> &#8203; </template>
-                </SfMenuItem>
-              </SfListItem>
-            </SfList>
-          </SfMegaMenuColumn>
-          <SfMegaMenuColumn
-            :title="$t('Product suggestions')"
-            class="sf-mega-menu-column--pined-content-on-mobile search__results"
-          >
-            <template #title="{ title }">
-              <SfMenuItem
-                :label="title"
-                class="sf-mega-menu-column__header search__header"
-              >
-                <template #mobile-nav-icon> &#8203; </template>
-              </SfMenuItem>
-            </template>
-            <SfScrollable
-              class="results--desktop desktop-only"
-              show-text=""
-              hide-text=""
-            >
-              <div class="results-listing">
-                <SfProductCard
-                  v-for="(product, index) in products"
-                  :key="index"
-                  class="result-card"
-                  :regular-price="
-                    $n(productGetters.getPrice(product).regular, 'currency')
-                  "
-                  :imageWidth="216"
-                  :imageHeight="288"
-                  :nuxtImgConfig="{ fit: 'cover' }"
-                  image-tag="nuxt-img"
-                  :score-rating="productGetters.getAverageRating(product)"
-                  :reviews-count="7"
-                  :image="$image(productGetters.getCoverImage(product))"
-                  :alt="productGetters.getName(product)"
-                  :title="productGetters.getName(product)"
-                  :link="localePath(goToProduct(product))"
-                  @click:wishlist="addItemToWishlist({ product })"
-                  @click="$emit('close')"
-                />
-              </div>
-            </SfScrollable>
-            <div class="results--mobile smartphone-only">
-              <SfProductCard
-                v-for="(product, index) in products"
-                :key="index"
-                class="result-card"
-                :imageWidth="216"
-                :imageHeight="288"
-                :nuxtImgConfig="{ fit: 'cover' }"
-                image-tag="nuxt-img"
-                :regular-price="
-                  $n(productGetters.getPrice(product).regular, 'currency')
-                "
-                :score-rating="productGetters.getAverageRating(product)"
-                :reviews-count="7"
-                :image="$image(productGetters.getCoverImage(product))"
-                :alt="productGetters.getName(product)"
-                :title="productGetters.getName(product)"
-                :link="localePath(goToProduct(product))"
-                @click="$emit('close')"
-              />
-            </div>
-          </SfMegaMenuColumn>
-          <div class="action-buttons smartphone-only">
-            <SfButton
-              class="action-buttons__button color-light"
-              @click="$emit('close')"
-            >
-              {{ $t('Cancel') }}
-            </SfButton>
-          </div>
-        </div>
-        <div v-else key="no-results" class="before-results">
-          <SfImage
-            :width="256"
-            :height="176"
-            src="/error/error.svg"
-            class="before-results__picture"
-            alt="error"
-            loading="lazy"
-          />
-          <p class="before-results__paragraph">
-            {{ $t('You haven’t searched for items yet') }}
-          </p>
-          <p class="before-results__paragraph">
-            {{ $t('Let’s start now – we’ll help you') }}
-          </p>
-          <SfButton
-            class="before-results__button color-secondary smartphone-only"
+    <SfMegaMenu :visible="isMegaMenuOpen" :title="$t('Menu')" class="search">
+      <SfMegaMenuColumn />
+      <SfMegaMenuColumn title="Categories">
+        <SfList v-for="(item, i) in navItems" v-if="item.name === menuItem">
+          <SfListItem v-for="(cat, i) in categoryTree.items">
+            <SfMenuItem :label="cat.label" />
+          </SfListItem>
+        </SfList>
+      </SfMegaMenuColumn>
+      <SfMegaMenuColumn>
+        <template #title>
+          <nuxt-link
+            v-for="(product, index) in tempProducts"
+            v-if="product.title === menuItem"
+            :key="index"
+            class="result-card"
+            :to="localePath(goToProduct(product))"
             @click="$emit('close')"
           >
-            {{ $t('Go back') }}
-          </SfButton>
-        </div>
-      </transition>
+            <transition>
+              <div class="result-card">
+                <SfImage
+                  :src="product.imgUrl"
+                  :alt="product.name"
+                  :width="344"
+                  :height="342"
+                  :nuxtImgConfig="{ fit: 'cover' }"
+                />
+                <h4>FEATRURED</h4>
+                <p>{{ product.name }}</p>
+              </div>
+            </transition>
+          </nuxt-link>
+        </template>
+        <!-- <SfProductCard
+          v-for="(product, index) in tempProducts"
+          v-if="product.title === menuItem"
+          :key="index"
+          class="result-card"
+          :imageWidth="344"
+          :imageHeight="344"
+          image-tag="nuxt-img"
+          :image="product.imgUrl"
+          :alt="product.name"
+          :link="localePath(goToProduct(product))"
+          @click="$emit('close')"
+        >
+          <template #title>
+            <h4>FEATRURED</h4>
+            <p>{{ product.name }}</p>
+          </template>
+        </SfProductCard> -->
+      </SfMegaMenuColumn>
     </SfMegaMenu>
   </div>
 </template>
@@ -134,7 +62,6 @@ import {
   SfList,
   SfBanner,
   SfProductCard,
-  SfScrollable,
   SfMenuItem,
   SfButton,
   SfImage
@@ -143,8 +70,10 @@ import { ref, watch, computed } from '@nuxtjs/composition-api';
 import {
   productGetters,
   categoryGetters,
-  useWishlist
+  useFacet,
+  facetGetters
 } from '@vue-storefront/odoo';
+
 import { useUiHelpers } from '~/composables';
 
 export default {
@@ -154,7 +83,6 @@ export default {
     SfList,
     SfBanner,
     SfProductCard,
-    SfScrollable,
     SfMenuItem,
     SfButton,
     SfImage
@@ -164,28 +92,67 @@ export default {
       type: Boolean,
       default: false
     },
-    result: {
-      type: Object
+    menuItem: {
+      type: String
+    },
+    navItems: {
+      type: Array
     }
   },
   watch: {
     $route() {
       this.$emit('close');
-      this.$emit('removeSearchResults');
     }
   },
   setup(props, { emit }) {
     const uiHelper = useUiHelpers();
     const isMegaMenuOpen = ref(props.visible);
-    const products = computed(() => props.result?.products);
-    const categories = computed(() => props.result?.categories);
-    const { addItem: addItemToWishlist } = useWishlist();
+    const { result } = useFacet();
+
+    const products = computed(() => facetGetters.getProducts(result.value));
+
+    const categoryTree = computed(() =>
+      facetGetters.getCategoryTree(result.value)
+    );
+
+    const currentCategory = computed(() => {
+      const categories = result.value?.data?.categories || [];
+      return categories[0] || {};
+    });
 
     const goToProduct = (product) => {
       return `/p/${productGetters.getId(product)}/${productGetters.getSlug(
         product
       )}`;
     };
+
+    const tempProducts = [
+      {
+        title: 'COOKE COLLECTION',
+        name: 'COOKE Balboa Fire Pit Table',
+        imgUrl:
+          'https://cooke.paylocal.net/web/image/product.template/827/image_1920'
+      },
+      {
+        title: 'SOCAL COLLECTION',
+        name: 'Santa Barbara Circular Fire Pit Table',
+        imgUrl:
+          'https://cooke.paylocal.net/web/image/product.template/838/image_1920'
+      },
+      {
+        title: 'DESIGN',
+        name: 'Custom Designs',
+        imgUrl:
+          'https://cookefurniture.com/wp-content/cache/pdfpreview/bce91aa423ed9e6320dba5db10d25fd9.png'
+      },
+      {
+        title: 'STORE',
+        name: 'Replacement Burners',
+        imgUrl:
+          'https://cooke.paylocal.net/web/image/product.template/604/image_1920'
+      }
+    ];
+
     watch(
       () => props.visible,
       (newVal) => {
@@ -199,14 +166,17 @@ export default {
       }
     );
     return {
-      addItemToWishlist,
       goToProduct,
       uiHelper,
       isMegaMenuOpen,
       categoryGetters,
       productGetters,
+      useFacet,
+      facetGetters,
       products,
-      categories
+      tempProducts,
+      categoryTree,
+      currentCategory
     };
   }
 };

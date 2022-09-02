@@ -16,10 +16,11 @@
       <template #logo v-if="isMegaMenu === true">
         <nuxt-link :to="localePath('/')" class="">
           <SfImage
-            src="/c-logo.png"
+            src="/cf-icon.svg"
             alt="Cooke Furniture"
-            :width="62"
-            :height="60"
+            :width="72"
+            :height="72"
+            style="margin-left: 1rem"
           />
         </nuxt-link>
       </template>
@@ -47,14 +48,22 @@
           v-if="index <= 3"
           :key="index"
           :label="item.name"
-          class=""
-          @mouseover="isMegaMenuOpen = true"
+          :class="{
+            'active-menu': selectedMenuItem === item.name && isMegaMenuOpen
+          }"
+          @mouseover="handleMouseOver(item.name)"
         />
       </template>
 
       <template #aside>
         <nuxt-link :to="localePath('/')" class="smartphone-only">
-          <SfImage src="/CookeFurniture.png" alt="Cooke Furniture" class="" />
+          <SfImage
+            src="/CookeFurniture.png"
+            alt="Cooke Furniture"
+            class=""
+            :width="null"
+            :height="null"
+          />
         </nuxt-link>
       </template>
       <template #header-icons>
@@ -147,7 +156,8 @@
     <SfOverlay :visible="isSearchOpen" />
     <MegaMenu
       :visible="isMegaMenuOpen"
-      :result="formatedResult"
+      :menuItem="selectedMenuItem"
+      :navItems="navItems"
       @close="closeMegaMenu"
       @mouseleave="closeMegaMenu"
     />
@@ -216,9 +226,16 @@ export default {
     const isSearchOpen = ref(false);
     const isMegaMenu = ref(false);
     const isMegaMenuOpen = ref(false);
+    const selectedMenuItem = ref(null);
 
     const toggleMegaMenu = () => {
       isMegaMenu.value = !isMegaMenu.value;
+    };
+
+    const handleMouseOver = (arg) => {
+      isMegaMenuOpen.value = true;
+      selectedMenuItem.value = arg;
+      console.log(arg);
     };
 
     const { changeSearchTerm } = useUiHelpers();
@@ -458,6 +475,8 @@ export default {
       isMegaMenu,
       toggleMegaMenu,
       isMegaMenuOpen,
+      selectedMenuItem,
+      handleMouseOver,
       consoleLog
     };
   }
@@ -502,5 +521,9 @@ export default {
   position: absolute;
   bottom: 40%;
   left: 40%;
+}
+.active-menu {
+  --header-navigation-item-color: var(--c-primary);
+  --header-navigation-item-border-color: var(--c-primary);
 }
 </style>
