@@ -20,17 +20,31 @@
       </div>
     </template>
 
-    <template #center>
+    <template #center v-if="isMegaMenu === false">
       <nuxt-link :to="localePath('/')" class="">
         <SfImage
           src="/CookeFurniture.png"
           alt="Cooke Furniture"
+          :width="null"
+          :height="null"
           style="padding-right: 4rem"
         />
       </nuxt-link>
     </template>
+
     <template #right>
-      <SfButton class="sf-button--text topbar__button">Contact Us</SfButton>
+      <SfButton
+        class="sf-button--text topbar__button"
+        v-if="isMegaMenu === true"
+        >About</SfButton
+      >
+      <SfButton class="sf-button--text topbar__button">Contact</SfButton>
+      <SfButton
+        class="sf-button--text topbar__button"
+        v-if="isMegaMenu === true"
+        @click="$emit('topbarAccount')"
+        >Join or Login</SfButton
+      >
     </template>
   </SfTopBar>
 </template>
@@ -45,6 +59,9 @@ export default {
     SfButton,
     SfImage,
     SfLink
+  },
+  props: {
+    isMegaMenu: Boolean
   },
   setup() {
     return {

@@ -1,10 +1,11 @@
 <template>
-  <div>
+  <div @topbar-account="handleAccountClick">
     <TopBar
       class="desktop-only"
       :class="{
         'topbar-on-top': isSearchOpen || isMegaMenuOpen
       }"
+      :is-mega-menu="isMegaMenu"
     />
     <SfHeader
       class="sf-header--has-mobile-search"
@@ -12,6 +13,17 @@
         'header-on-top': isSearchOpen || isMegaMenuOpen
       }"
     >
+      <template #logo v-if="isMegaMenu === true">
+        <nuxt-link :to="localePath('/')" class="">
+          <SfImage
+            src="/c-logo.png"
+            alt="Cooke Furniture"
+            :width="62"
+            :height="60"
+          />
+        </nuxt-link>
+      </template>
+
       <template #navigation v-if="isMegaMenu === false">
         <div v-for="(item, index) in navItems" :key="index">
           <div v-if="item.isDropdown === true">
@@ -28,13 +40,18 @@
           </div>
         </div>
       </template>
+
       <template #navigation v-else="isMegaMenu === true">
         <SfHeaderNavigationItem
-          class="nav-item"
-          label="Test"
+          v-for="(item, index) in navItems"
+          v-if="index <= 3"
+          :key="index"
+          :label="item.name"
+          class=""
           @mouseover="isMegaMenuOpen = true"
         />
       </template>
+
       <template #aside>
         <nuxt-link :to="localePath('/')" class="smartphone-only">
           <SfImage src="/CookeFurniture.png" alt="Cooke Furniture" class="" />
@@ -43,6 +60,7 @@
       <template #header-icons>
         <div class="sf-header__icons">
           <SfButton
+            v-if="isMegaMenu === false"
             class="sf-button--pure sf-header__action"
             @click="handleAccountClick"
           >
@@ -72,7 +90,8 @@
           </SfButton>
         </div>
       </template>
-      <template #search>
+
+      <template #search v-if="isMegaMenu === false">
         <SfSearchBar
           ref="searchBarRef"
           :placeholder="$t('Search for items')"
@@ -108,6 +127,15 @@
             </SfButton>
           </template>
         </SfSearchBar>
+      </template>
+
+      <template #search v-else-if="isMegaMenu === true">
+        <SfButton
+          class="sf-button--pure sf-header__action"
+          @click="isSearchOpen = true"
+        >
+          <SfIcon class="sf-header__icon" icon="search" size="1.25rem" />
+        </SfButton>
       </template>
     </SfHeader>
     <SearchResults
@@ -186,7 +214,7 @@ export default {
     const term = ref(null);
     const formatedResult = ref(null);
     const isSearchOpen = ref(false);
-    const isMegaMenu = ref(true);
+    const isMegaMenu = ref(false);
     const isMegaMenuOpen = ref(false);
 
     const toggleMegaMenu = () => {
@@ -291,15 +319,15 @@ export default {
           },
           {
             name: 'Planters',
-            url: 'example02.com'
+            url: 'example03.com'
           },
           {
             name: 'Fire Features',
-            url: 'example02.com'
+            url: 'example04.com'
           },
           {
             name: 'Fire Pit Burners',
-            url: 'example02.com'
+            url: 'example05.com'
           }
         ]
       },
@@ -326,15 +354,15 @@ export default {
           },
           {
             name: 'Olympic Fire Pit Table',
-            url: 'example02.com'
+            url: 'example5.com'
           },
           {
             name: 'Costa Mesa Fire Pit Table',
-            url: 'example02.com'
+            url: 'example6.com'
           },
           {
             name: 'Miami Fire Pit Table',
-            url: 'example02.com'
+            url: 'example7.com'
           }
         ]
       },
@@ -345,27 +373,27 @@ export default {
         dropdownOptions: [
           {
             name: 'Finishes and Accesories',
-            url: 'example5.com'
-          },
-          {
-            name: 'Custom Products',
-            url: 'example6.com'
-          },
-          {
-            name: 'Ideas Book',
-            url: 'example7.com'
-          },
-          {
-            name: 'Videos',
             url: 'example8.com'
           },
           {
+            name: 'Custom Products',
+            url: 'example9.com'
+          },
+          {
+            name: 'Ideas Book',
+            url: 'example99.com'
+          },
+          {
+            name: 'Videos',
+            url: 'example98.com'
+          },
+          {
             name: 'Manuals',
-            url: 'example02.com'
+            url: 'example92.com'
           },
           {
             name: 'Product Specs',
-            url: 'example02.com'
+            url: 'example82.com'
           }
         ]
       },
@@ -448,12 +476,16 @@ export default {
     height: 100%;
   }
   ::v-deep .sf-header__navigation {
-    --header-navigation-margin: 0 auto 0 0;
+    --header-navigation-margin: 0 auto 0 auto;
+    justify-content: end;
+  }
+  ::v-deep .sf-header-navigation-item {
+    --header-navigation-item-flex: 0;
   }
 }
 
 .topbar-on-top {
-  z-index: 3;
+  z-index: 4;
 }
 
 .header-on-top {
