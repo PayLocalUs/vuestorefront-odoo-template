@@ -29,14 +29,14 @@
         <div v-for="(item, index) in navItems" :key="index">
           <div v-if="item.isDropdown === true">
             <NavDropdown
-              :title="item.name"
+              :title="item.name.toUpperCase()"
               :titleUrl="item.url"
               :options="item.dropdownOptions"
             />
           </div>
           <div v-else-if="item.isDropdown === false">
             <NuxtLink :to="item.url" class="sf-menu-item__label nav-item">{{
-              item.name
+              item.name.toUpperCase()
             }}</NuxtLink>
           </div>
         </div>
@@ -44,14 +44,24 @@
 
       <template #navigation v-else="isMegaMenu === true">
         <SfHeaderNavigationItem
-          v-for="(item, index) in navItems"
-          v-if="index <= 3"
+          v-for="(category, index) in navCategories"
+          :link="localePath(`/c/${category.slug}/${category.id}`)"
           :key="index"
-          :label="item.name"
+          :label="category.name"
+          class="nav-item"
           :class="{
-            'active-menu': selectedMenuItem === item.name && isMegaMenuOpen
+            'active-menu': selectedMenuItem === category.name && isMegaMenuOpen
           }"
-          @mouseover="handleMouseOver(item.name)"
+          @mouseover="handleMouseOver(category.name)"
+        />
+        <SfHeaderNavigationItem
+          :link="localePath(`/design`)"
+          label="design"
+          class="nav-item"
+          :class="{
+            'active-menu': selectedMenuItem === 'design' && isMegaMenuOpen
+          }"
+          @mouseover="handleMouseOver('design')"
         />
       </template>
 
@@ -156,8 +166,8 @@
     <SfOverlay :visible="isSearchOpen" />
     <MegaMenu
       :visible="isMegaMenuOpen"
+      :navItems="megaMenuItems"
       :menuItem="selectedMenuItem"
-      :navItems="navItems"
       @close="closeMegaMenu"
       @mouseleave="closeMegaMenu"
     />
@@ -183,11 +193,11 @@ import {
   useUser,
   cartGetters,
   categoryGetters,
-  // useCategory,
+  useCategory,
   useFacet
 } from '@vue-storefront/odoo';
 import { clickOutside } from '@storefront-ui/vue/src/utilities/directives/click-outside/click-outside-directive.js';
-import { computed, ref, watch } from '@nuxtjs/composition-api';
+import { computed, ref, watch, onMounted } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 import { useUiHelpers } from '~/composables';
 import LocaleSelector from './LocaleSelector';
@@ -198,6 +208,7 @@ import MegaMenu from '~/components/MegaMenu';
 
 import debounce from 'lodash.debounce';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer.js';
+
 export default {
   components: {
     SfHeader,
@@ -216,26 +227,21 @@ export default {
   },
   directives: { clickOutside },
   setup(props, { root }) {
-    const consoleLog = () => {
-      console.log('Its working');
+    const consoleLog = (arg) => {
+      console.log(arg);
     };
 
     const searchBarRef = ref(null);
     const term = ref(null);
     const formatedResult = ref(null);
     const isSearchOpen = ref(false);
-    const isMegaMenu = ref(false);
+    const isMegaMenu = ref(true);
     const isMegaMenuOpen = ref(false);
     const selectedMenuItem = ref(null);
+    const megaMenuItems = ref(null);
 
     const toggleMegaMenu = () => {
       isMegaMenu.value = !isMegaMenu.value;
-    };
-
-    const handleMouseOver = (arg) => {
-      isMegaMenuOpen.value = true;
-      selectedMenuItem.value = arg;
-      console.log(arg);
     };
 
     const { changeSearchTerm } = useUiHelpers();
@@ -246,8 +252,25 @@ export default {
     const { load: loadCart, cart } = useCart();
     const { load: loadWishlist, wishlist } = useWishlist();
     const { search: searchProductApi, result } = useFacet('AppHeader:Search');
-    // const { categories: topCategories, search: searchTopCategoryApi } =
-    //   useCategory('AppHeader:TopCategories');
+    const { categories: topCategories, search: searchTopCategoryApi } =
+      useCategory('AppHeader:TopCategories');
+
+    const filterCategoryReturnChildren = (arg) => {
+      const filter = computed(() =>
+        topCategories.value.filter((category) => category.name === arg)
+      );
+      const [result] = filter.value;
+      return result.childs;
+    };
+
+    const handleMouseOver = (arg) => {
+      isMegaMenuOpen.value = true;
+      selectedMenuItem.value = arg;
+
+      if (selectedMenuItem.value !== 'design') {
+        megaMenuItems.value = filterCategoryReturnChildren(arg);
+      }
+    };
 
     const isMobile = computed(() => mapMobileObserver().isMobile.get());
 
@@ -258,7 +281,6 @@ export default {
     const accountIcon = computed(() =>
       isAuthenticated.value ? 'profile_fill' : 'profile'
     );
-
     const removeSearchResults = () => {
       formatedResult.value = null;
     };
@@ -312,9 +334,11 @@ export default {
       toggleLoginModal();
     };
 
+    const navCategories = computed(() => topCategories.value);
+
     const navItems = [
       {
-        name: 'COOKE COLLECTION',
+        name: 'COOKE Collection',
         url: '/category',
         isDropdown: true,
         dropdownOptions: [
@@ -349,7 +373,7 @@ export default {
         ]
       },
       {
-        name: 'SOCAL COLLECTION',
+        name: 'SoCal Collection',
         url: '/category',
         isDropdown: true,
         dropdownOptions: [
@@ -384,7 +408,7 @@ export default {
         ]
       },
       {
-        name: 'DESIGN',
+        name: 'design',
         url: '/category',
         isDropdown: true,
         dropdownOptions: [
@@ -415,12 +439,12 @@ export default {
         ]
       },
       {
-        name: 'STORE',
+        name: 'store',
         url: '/category',
         isDropdown: false
       },
       {
-        name: 'ABOUT US',
+        name: 'about us',
         url: '/about',
         isDropdown: false
       }
@@ -442,19 +466,27 @@ export default {
 
     onSSR(async () => {
       await Promise.all([
-        // searchTopCategoryApi({
-        //   filter: { parent: true }
-        // }),
+        searchTopCategoryApi({
+          filter: { parent: true }
+        }),
         loadUser(),
         loadWishlist(),
         loadCart()
       ]);
     });
 
+    onMounted(() => {
+      // topCategories.value.forEach((category) => {
+      //   category.childs.forEach((child) => console.log(child.name));
+      // });
+    });
+
     return {
       wishlistHasItens: computed(
         () => wishlist.value?.wishlistItems.length > 0
       ),
+      topCategories,
+      navCategories,
       navItems,
       accountIcon,
       closeOrFocusSearchBar,
@@ -477,6 +509,7 @@ export default {
       isMegaMenuOpen,
       selectedMenuItem,
       handleMouseOver,
+      megaMenuItems,
       consoleLog
     };
   }
@@ -523,7 +556,7 @@ export default {
   left: 40%;
 }
 .active-menu {
-  --header-navigation-item-color: var(--c-primary);
-  --header-navigation-item-border-color: var(--c-primary);
+  --header-navigation-item-color: var(--c-primary-darken);
+  --header-navigation-item-border-color: var(--c-primary-darken);
 }
 </style>

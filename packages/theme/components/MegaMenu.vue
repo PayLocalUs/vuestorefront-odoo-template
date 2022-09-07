@@ -2,10 +2,13 @@
   <div @mouseleave="$emit('close')">
     <SfMegaMenu :visible="isMegaMenuOpen" :title="$t('Menu')" class="search">
       <SfMegaMenuColumn />
-      <SfMegaMenuColumn title="Categories">
-        <SfList v-for="(item, i) in navItems" v-if="item.name === menuItem">
-          <SfListItem v-for="(cat, i) in categoryTree.items">
-            <SfMenuItem :label="cat.label" />
+      <SfMegaMenuColumn>
+        <SfList>
+          <SfListItem v-for="(item, i) in navItems" :key="i">
+            <SfMenuItem
+              :label="item.name"
+              :link="localePath(`/c/${item.slug}/${item.id}`)"
+            />
           </SfListItem>
         </SfList>
       </SfMegaMenuColumn>
@@ -16,7 +19,7 @@
             v-if="product.title === menuItem"
             :key="index"
             class="result-card"
-            :to="localePath(goToProduct(product))"
+            :to="localePath(product.href)"
             @click="$emit('close')"
           >
             <transition>
@@ -34,24 +37,6 @@
             </transition>
           </nuxt-link>
         </template>
-        <!-- <SfProductCard
-          v-for="(product, index) in tempProducts"
-          v-if="product.title === menuItem"
-          :key="index"
-          class="result-card"
-          :imageWidth="344"
-          :imageHeight="344"
-          image-tag="nuxt-img"
-          :image="product.imgUrl"
-          :alt="product.name"
-          :link="localePath(goToProduct(product))"
-          @click="$emit('close')"
-        >
-          <template #title>
-            <h4>FEATRURED</h4>
-            <p>{{ product.name }}</p>
-          </template>
-        </SfProductCard> -->
       </SfMegaMenuColumn>
     </SfMegaMenu>
   </div>
@@ -66,7 +51,7 @@ import {
   SfButton,
   SfImage
 } from '@storefront-ui/vue';
-import { ref, watch, computed } from '@nuxtjs/composition-api';
+import { ref, watch } from '@nuxtjs/composition-api';
 import {
   productGetters,
   categoryGetters,
@@ -92,11 +77,11 @@ export default {
       type: Boolean,
       default: false
     },
-    menuItem: {
-      type: String
-    },
     navItems: {
       type: Array
+    },
+    menuItem: {
+      type: String
     }
   },
   watch: {
@@ -107,49 +92,28 @@ export default {
   setup(props, { emit }) {
     const uiHelper = useUiHelpers();
     const isMegaMenuOpen = ref(props.visible);
-    const { result } = useFacet();
-
-    const products = computed(() => facetGetters.getProducts(result.value));
-
-    const categoryTree = computed(() =>
-      facetGetters.getCategoryTree(result.value)
-    );
-
-    const currentCategory = computed(() => {
-      const categories = result.value?.data?.categories || [];
-      return categories[0] || {};
-    });
-
-    const goToProduct = (product) => {
-      return `/p/${productGetters.getId(product)}/${productGetters.getSlug(
-        product
-      )}`;
-    };
 
     const tempProducts = [
       {
-        title: 'COOKE COLLECTION',
+        title: 'COOKE Collection',
         name: 'COOKE Balboa Fire Pit Table',
         imgUrl:
-          'https://cooke.paylocal.net/web/image/product.template/827/image_1920'
+          'https://cooke.paylocal.net/web/image/product.template/827/image_1920',
+        href: '/p/827/zzz-bal-s48x36x4x21-cooke-balboa-fire-pit-table-48-x-36-x-21-stone-top-827'
       },
       {
-        title: 'SOCAL COLLECTION',
+        title: 'SoCal Collection',
         name: 'Santa Barbara Circular Fire Pit Table',
         imgUrl:
-          'https://cooke.paylocal.net/web/image/product.template/838/image_1920'
+          'https://cooke.paylocal.net/web/image/product.template/838/image_1920',
+        href: '/p/838/zzz-sb-cfpt-48-cooke-santa-barbara-circular-fire-pit-table-48-diameter-lounge-height-838'
       },
       {
-        title: 'DESIGN',
+        title: 'design',
         name: 'Custom Designs',
         imgUrl:
-          'https://cookefurniture.com/wp-content/cache/pdfpreview/bce91aa423ed9e6320dba5db10d25fd9.png'
-      },
-      {
-        title: 'STORE',
-        name: 'Replacement Burners',
-        imgUrl:
-          'https://cooke.paylocal.net/web/image/product.template/604/image_1920'
+          'https://cookefurniture.com/wp-content/cache/pdfpreview/bce91aa423ed9e6320dba5db10d25fd9.png',
+        href: ''
       }
     ];
 
@@ -165,18 +129,19 @@ export default {
         }
       }
     );
+
+    // onUpdated(() => {
+    //   console.log(childs.value);
+    // });
+
     return {
-      goToProduct,
       uiHelper,
       isMegaMenuOpen,
       categoryGetters,
       productGetters,
       useFacet,
       facetGetters,
-      products,
-      tempProducts,
-      categoryTree,
-      currentCategory
+      tempProducts
     };
   }
 };
