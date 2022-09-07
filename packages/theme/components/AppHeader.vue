@@ -42,27 +42,74 @@
         </div>
       </template>
 
-      <template #navigation v-else="isMegaMenu === true">
+      <template
+        #navigation
+        v-else-if="isMegaMenu === true && isSearchOpen === false"
+      >
         <SfHeaderNavigationItem
           v-for="(category, index) in navCategories"
           :link="localePath(`/c/${category.slug}/${category.id}`)"
           :key="index"
           :label="category.name"
-          class="nav-item"
+          class="mega-menu-item"
           :class="{
             'active-menu': selectedMenuItem === category.name && isMegaMenuOpen
           }"
           @mouseover="handleMouseOver(category.name)"
+          @mouseleave="isMegaMenuOpen = false"
         />
         <SfHeaderNavigationItem
           :link="localePath(`/design`)"
           label="design"
-          class="nav-item"
+          class="mega-menu-item"
           :class="{
             'active-menu': selectedMenuItem === 'design' && isMegaMenuOpen
           }"
           @mouseover="handleMouseOver('design')"
+          @mouseleave="isMegaMenuOpen = false"
         />
+      </template>
+
+      <template
+        #navigation
+        v-else-if="isMegaMenu === true && isSearchOpen === true"
+      >
+        <SfSearchBar
+          ref="searchBarRef"
+          :placeholder="$t('Search for items')"
+          aria-label="Search"
+          class="sf-header__search"
+          :value="term"
+          @input="handleSearch"
+          @keydown.enter="handleSearch($event)"
+          @focus="isSearchOpen = true"
+          @keydown.esc="closeSearch"
+          v-click-outside="closeSearch"
+          style="width: 100%"
+        >
+          <template #icon>
+            <SfButton
+              v-if="!!term"
+              class="sf-search-bar__button sf-button--pure"
+              @click="closeOrFocusSearchBar"
+            >
+              <span class="sf-search-bar__icon">
+                <SfIcon color="var(--c-text)" size="18px" icon="cross" />
+              </span>
+            </SfButton>
+            <SfButton
+              v-else
+              class="sf-search-bar__button sf-button--pure"
+              @click="
+                isSearchOpen ? (isSearchOpen = false) : (isSearchOpen = true)
+              "
+            >
+              <span class="sf-search-bar__icon">
+                <SfIcon color="var(--c-text)" size="20px" icon="search" />
+              </span>
+            </SfButton>
+          </template>
+        </SfSearchBar>
       </template>
 
       <template #aside>
@@ -550,6 +597,12 @@ export default {
 .nav-item:hover {
   color: var(--c-primary);
 }
+
+.mega-menu-item {
+  margin: 0;
+  padding: 0 var(--spacer-sm);
+}
+
 .cart-badge {
   position: absolute;
   bottom: 40%;
