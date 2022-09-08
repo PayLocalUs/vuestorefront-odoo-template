@@ -3,7 +3,7 @@
     <SfMegaMenu
       :visible="isSearchOpen"
       :title="$t('Search results')"
-      class="search"
+      class="search drop-shadow"
     >
       <transition name="sf-fade" mode="out-in">
         <div
@@ -13,10 +13,7 @@
         >
           <SfMegaMenuColumn
             :title="$t('Categories')"
-            class="
-              sf-mega-menu-column--pined-content-on-mobile
-              search__categories
-            "
+            class="sf-mega-menu-column--pined-content-on-mobile search__categories"
           >
             <template #title="{ title }">
               <SfMenuItem :label="title" @click="megaMenu.changeActive(title)">
@@ -215,7 +212,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.drop-shadow {
+  box-shadow: 0 50vh 2px -2px rgba(0, 0, 0, 0.5);
+}
 .search {
+  min-height: 50vh;
   position: absolute;
   right: 0;
   left: 0;

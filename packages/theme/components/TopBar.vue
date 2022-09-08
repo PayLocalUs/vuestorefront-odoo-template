@@ -1,5 +1,9 @@
 <template>
-  <SfTopBar class="topbar" :class="{ 'add-padding': isMegaMenu === false }">
+  <SfTopBar
+    class="topbar"
+    :class="{ 'add-padding': isMegaMenu === false }"
+    v-on:topbarAccount="$emit('topbarAccount')"
+  >
     <template #left>
       <div class="spacer">
         <div style="display: flex; justify-content: space-between; width: 8rem">
@@ -36,14 +40,15 @@
       <SfButton
         class="sf-button--text topbar__button"
         v-if="isMegaMenu === true"
-        >About</SfButton
       >
+        <NuxtLink to="/about">About</NuxtLink>
+      </SfButton>
       <SfButton class="sf-button--text topbar__button">Contact</SfButton>
       <SfButton
         class="sf-button--text topbar__button"
         v-if="isMegaMenu === true"
         @click="$emit('topbarAccount')"
-        >Join or Login</SfButton
+        >Sign In or Join</SfButton
       >
     </template>
   </SfTopBar>
@@ -63,6 +68,7 @@ export default {
   props: {
     isMegaMenu: Boolean
   },
+  emits: ['topbarAccount'],
   setup() {
     return {
       addBasePath

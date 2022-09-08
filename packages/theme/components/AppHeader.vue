@@ -1,11 +1,12 @@
 <template>
-  <div @topbar-account="handleAccountClick">
+  <div>
     <TopBar
       class="desktop-only"
       :class="{
         'topbar-on-top': isSearchOpen || isMegaMenuOpen
       }"
       :is-mega-menu="isMegaMenu"
+      v-on:topbarAccount="handleAccountClick"
     />
     <SfHeader
       class="sf-header--has-mobile-search"
@@ -56,7 +57,6 @@
             'active-menu': selectedMenuItem === category.name && isMegaMenuOpen
           }"
           @mouseover="handleMouseOver(category.name)"
-          @mouseleave="isMegaMenuOpen = false"
         />
         <SfHeaderNavigationItem
           :link="localePath(`/design`)"
@@ -66,7 +66,6 @@
             'active-menu': selectedMenuItem === 'design' && isMegaMenuOpen
           }"
           @mouseover="handleMouseOver('design')"
-          @mouseleave="isMegaMenuOpen = false"
         />
       </template>
 
@@ -78,42 +77,23 @@
           ref="searchBarRef"
           :placeholder="$t('Search for items')"
           aria-label="Search"
-          class="sf-header__search"
+          class="header-search"
           :value="term"
           @input="handleSearch"
           @keydown.enter="handleSearch($event)"
           @focus="isSearchOpen = true"
           @keydown.esc="closeSearch"
           v-click-outside="closeSearch"
-          style="width: 100%"
         >
-          <template #icon>
-            <SfButton
-              v-if="!!term"
-              class="sf-search-bar__button sf-button--pure"
-              @click="closeOrFocusSearchBar"
-            >
-              <span class="sf-search-bar__icon">
-                <SfIcon color="var(--c-text)" size="18px" icon="cross" />
-              </span>
-            </SfButton>
-            <SfButton
-              v-else
-              class="sf-search-bar__button sf-button--pure"
-              @click="
-                isSearchOpen ? (isSearchOpen = false) : (isSearchOpen = true)
-              "
-            >
-              <span class="sf-search-bar__icon">
-                <SfIcon color="var(--c-text)" size="20px" icon="search" />
-              </span>
-            </SfButton>
-          </template>
         </SfSearchBar>
       </template>
 
       <template #aside>
-        <nuxt-link :to="localePath('/')" class="smartphone-only">
+        <nuxt-link
+          :to="localePath('/')"
+          class="smartphone-only"
+          v-if="isMegaMenu === false"
+        >
           <SfImage
             src="/CookeFurniture.png"
             alt="Cooke Furniture"
@@ -134,7 +114,10 @@
           </SfButton>
           <SfButton
             class="sf-button--pure sf-header__action"
-            @click="toggleCartSidebar"
+            @click="
+              toggleCartSidebar();
+              isMegaMenuOpen = false;
+            "
           >
             <SfIcon class="sf-header__icon" icon="empty_cart" size="1.25rem" />
 
@@ -196,9 +179,24 @@
       </template>
 
       <template #search v-else-if="isMegaMenu === true">
+        <SfSearchBar
+          ref="searchBarRef"
+          :placeholder="$t('Search for items')"
+          aria-label="Search"
+          class="sf-header__search smartphone-only"
+          :value="term"
+          @input="handleSearch"
+          @keydown.enter="handleSearch($event)"
+          @focus="isSearchOpen = true"
+        >
+        </SfSearchBar>
         <SfButton
           class="sf-button--pure sf-header__action"
-          @click="isSearchOpen = true"
+          @click="
+            isMegaMenuOpen = false;
+            isSearchOpen = true;
+            focusSearchBar();
+          "
         >
           <SfIcon class="sf-header__icon" icon="search" size="1.25rem" />
         </SfButton>
@@ -210,7 +208,6 @@
       @close="closeSearch"
       @removeSearchResults="removeSearchResults"
     />
-    <SfOverlay :visible="isSearchOpen" />
     <MegaMenu
       :visible="isMegaMenuOpen"
       :navItems="megaMenuItems"
@@ -218,7 +215,6 @@
       @close="closeMegaMenu"
       @mouseleave="closeMegaMenu"
     />
-    <SfOverlay :visible="isMegaMenuOpen" />
   </div>
 </template>
 
@@ -289,6 +285,11 @@ export default {
 
     const toggleMegaMenu = () => {
       isMegaMenu.value = !isMegaMenu.value;
+    };
+
+    const focusSearchBar = () => {
+      // console.log(searchBarRef.value.$el);
+      // return searchBarRef.value.$el.children[0].focus();
     };
 
     const { changeSearchTerm } = useUiHelpers();
@@ -557,6 +558,7 @@ export default {
       selectedMenuItem,
       handleMouseOver,
       megaMenuItems,
+      focusSearchBar,
       consoleLog
     };
   }
@@ -565,6 +567,10 @@ export default {
 
 <style lang="scss" scoped>
 @import '~@storefront-ui/shared/styles/components/organisms/SfHeader.scss';
+
+.header-search {
+  width: 36rem;
+}
 
 .sf-header {
   --header-padding: var(--spacer-sm);

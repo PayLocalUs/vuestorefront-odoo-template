@@ -1,6 +1,10 @@
 <template>
   <div @mouseleave="$emit('close')">
-    <SfMegaMenu :visible="isMegaMenuOpen" :title="$t('Menu')" class="search">
+    <SfMegaMenu
+      :visible="isMegaMenuOpen"
+      :title="$t('Menu')"
+      class="search drop-shadow"
+    >
       <SfMegaMenuColumn />
       <SfMegaMenuColumn>
         <SfList>
@@ -147,7 +151,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.drop-shadow {
+  box-shadow: 0 48vh 2px -2px rgba(0, 0, 0, 0.5);
+}
 .search {
+  min-height: 50vh;
   position: absolute;
   right: 0;
   left: 0;
