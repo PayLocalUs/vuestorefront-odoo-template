@@ -79,6 +79,9 @@ export default {
 	&__title {
 		color: white;
 	}
+	&__subtitle {
+		color: white;
+	}
 	&__description {
 		color: white;
 	}

@@ -228,7 +228,7 @@
   </div>
 </template>
 
-<script >
+<script>
 import {
   SfButton,
   SfList,
@@ -341,6 +341,7 @@ export default defineComponent({
 
     onMounted(() => {
       root.$scrollTo(root.$el, 2000);
+      // console.log(result.value);
     });
 
     return {

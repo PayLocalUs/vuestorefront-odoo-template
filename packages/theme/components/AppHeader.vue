@@ -49,7 +49,7 @@
       >
         <SfHeaderNavigationItem
           v-for="(category, index) in navCategories"
-          :link="localePath(`/c/${category.slug}/${category.id}`)"
+          :link="localePath(`/${category.name.replace(/\s/g, '')}`)"
           :key="index"
           :label="category.name"
           class="mega-menu-item"
@@ -488,7 +488,7 @@ export default {
       },
       {
         name: 'store',
-        url: '/category',
+        url: '/categoryall',
         isDropdown: false
       },
       {
@@ -524,9 +524,7 @@ export default {
     });
 
     onMounted(() => {
-      // topCategories.value.forEach((category) => {
-      //   category.childs.forEach((child) => console.log(child.name));
-      // });
+      // consoleLog(navCategories);
     });
 
     return {
