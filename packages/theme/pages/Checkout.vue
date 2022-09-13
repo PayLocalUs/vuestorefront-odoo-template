@@ -1,4 +1,3 @@
-
 <template>
   <div id="checkout">
     <div class="checkout">
@@ -33,6 +32,7 @@ const STEPS = {
   payment: 'Payment'
 };
 export default {
+  layout: 'checkout',
   name: 'Checkout',
   components: {
     SfButton,
