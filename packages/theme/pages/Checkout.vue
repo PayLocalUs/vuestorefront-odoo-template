@@ -64,6 +64,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '~@storefront-ui/shared/styles/components/molecules/SfSteps.scss';
+.sf-steps__step {
+  background-color: var(--c-light);
+}
 #checkout {
   box-sizing: border-box;
   @include for-desktop {
@@ -91,9 +95,13 @@ export default {
     --steps-content-padding: 0 var(--spacer-base);
     @include for-desktop {
       --steps-content-padding: 0;
+      ::v-deep .sf-steps__step {
+        background-color: var(--c-light);
+        padding: var(--spacer-sm) 0;
+      }
     }
-    &-auth::v-deep .sf-steps__step:first-child {
-      --steps-step-color: #e8e4e4;
+    &-auth ::v-deep .sf-steps__step:first-child {
+      --steps-step-color: var(--c-primary);
     }
   }
 }

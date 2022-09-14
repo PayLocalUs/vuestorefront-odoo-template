@@ -1,7 +1,11 @@
 <template>
-  <div>
+  <div style="padding: 0 1rem">
+    <LazyHydrate when-visible>
+      <CheckoutHeader />
+    </LazyHydrate>
     <div id="layout">
       <nuxt :key="route.fullPath" />
+      <CartSidebar />
     </div>
     <LazyHydrate when-visible>
       <BottomBar />
@@ -11,12 +15,16 @@
 
 <script>
 import { useRoute } from '@nuxtjs/composition-api';
+import CartSidebar from '~/components/CartSidebar.vue';
 import BottomBar from '~/components/Checkout/BottomBar.vue';
+import CheckoutHeader from '~/components/Checkout/CheckoutHeader.vue';
 
 export default {
   name: 'checkout',
   components: {
-    BottomBar
+    BottomBar,
+    CartSidebar,
+    CheckoutHeader
   },
 
   setup() {

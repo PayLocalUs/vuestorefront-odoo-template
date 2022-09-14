@@ -19,7 +19,7 @@
         :class="[
           'sf-property--full-width',
           'sf-property--large',
-          { discounted: totals.special > 0 },
+          { discounted: totals.special > 0 }
         ]"
       />
       <SfProperty
@@ -32,11 +32,7 @@
       <SfProperty
         v-if="totals.special > 0"
         :value="$n(totals.special, 'currency')"
-        class="
-          sf-property--full-width sf-property--small
-          property
-          special-price
-        "
+        class="sf-property--full-width sf-property--small property special-price"
       />
       <SfProperty
         name="Shipping"
@@ -155,7 +151,7 @@ export default {
 .highlighted {
   box-sizing: border-box;
   width: 100%;
-  background-color: var(--c-light);
+  background-color: var(--c-white);
   padding: var(--spacer-xl) var(--spacer-xl) 0;
   &:last-child {
     padding-bottom: var(--spacer-xl);

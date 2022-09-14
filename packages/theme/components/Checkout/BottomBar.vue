@@ -28,6 +28,8 @@ export default {
 <style lang="scss" scoped>
 .topbar {
   position: relative;
+  margin-top: var(--spacer-base);
+  padding: var(--spacer-base) 0;
   z-index: 2;
   &__button {
     margin: 0 0 0 var(--spacer-xs);
