@@ -13,8 +13,7 @@ const useUiHelpers = (): any => {
   const router = useRouter();
   const { params, query } = route.value;
 
-  const getFacetsFromURL = () : ParamsFromUrl => {
-
+  const getFacetsFromURL = (): ParamsFromUrl => {
     let filters: string[] = [];
     if (query) {
       Object.keys(query).forEach((filterKey) => {
@@ -28,10 +27,9 @@ const useUiHelpers = (): any => {
 
     const price = query?.price?.split('-');
 
-    const pageSize = 12;
+    const pageSize = 10;
     query.itemsPerPage ? parseInt(query.itemsPerPage) : 10;
-    const sort = '1' as any;
-    query?.sort?.split(',') || [];
+    const sort = query?.sort?.split(',') || [];
     const page = query?.page || 1;
     const categoryId = parseInt(params.slug_3) || parseInt(params.slug_2);
 
@@ -46,7 +44,7 @@ const useUiHelpers = (): any => {
       fetchCategory: true,
       filter: {
         categoryId,
-        attributeValueId: filters?.map(id => parseInt(id))
+        attributeValueId: filters?.map((id) => parseInt(id))
       }
     };
   };
